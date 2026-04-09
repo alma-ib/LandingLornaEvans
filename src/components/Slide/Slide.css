@@ -1,7 +1,12 @@
 .slide {
-  height: 100vh;
   width: 100%;
   scroll-snap-align: start; /* CRITICAL: snap alignment */
+  position: relative;
+}
+
+.slide-hero {
+  height: 100vh;
+  width: 100%;
   background-size: cover;
   background-position: center;
   position: relative;
