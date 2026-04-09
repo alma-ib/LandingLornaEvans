@@ -1,0 +1,21 @@
+.slides-container {
+  /* Critical scroll-snapping rules begin disabled */
+  height: 100vh;
+  width: 100%;
+  overflow-y: hidden;
+  scroll-snap-type: none;
+  
+  /* Hide scrollbar for a cleaner presentation */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  transition: scroll-snap-type 0.3s ease;
+}
+
+.slides-container.is-visible {
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.slides-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
