@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Slide } from '../Slide/Slide';
 import { Footer } from '../Footer/Footer';
+import { OverlappingImages } from '../OverlappingImages/OverlappingImages';
 import './SlidesSection.css';
 
 export const SlidesSection: React.FC = () => {
@@ -54,6 +55,7 @@ export const SlidesSection: React.FC = () => {
       title: 'Mission Briefing',
       description: 'Preparing for launch. Building scalable, immersive web experiences is my primary directive.',
       imageUrl: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80',
+      sideElement: <OverlappingImages imageFront="/images/LornaArgNasa.avif" imageBack="/images/LornaPileta.avif" />,
       buttonText: 'View Logs'
     },
     {
