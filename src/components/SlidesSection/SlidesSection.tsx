@@ -60,14 +60,14 @@ export const SlidesSection: React.FC = () => {
       id: 2,
       title: 'Orbital Mechanics',
       description: 'Navigating complex codebases with precision and maintaining stable orbits in dynamic environments.',
-      imageUrl: 'https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&w=1920&q=80',
+      imageUrl: '/images/art002e009288orig.jpg',
       buttonText: 'Systems Check'
     },
     {
       id: 3,
       title: 'Deep Space Comm',
       description: 'Ready to establish contact with earthly entities. Transmitting clean code across the galaxy.',
-      imageUrl: 'https://images.unsplash.com/photo-1541185933-ef5d8ed016c2?auto=format&fit=crop&w=1920&q=80',
+      imageUrl: '/images/art002e012702~large.jpg',
       buttonText: 'Initialize Signal'
     }
   ];
