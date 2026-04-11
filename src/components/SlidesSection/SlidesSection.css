@@ -1,5 +1,6 @@
 .slides-container {
   /* Critical scroll-snapping rules begin disabled */
+  position: relative;
   height: 100vh;
   width: 100%;
   overflow-y: hidden;
@@ -18,6 +19,25 @@
 
 .slides-container::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
+}
+
+/* Entry Shadow Effect */
+.slides-top-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 25vh;
+  background: linear-gradient(to top, transparent, var(--color-bg));
+  z-index: 100;
+  pointer-events: none;
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+}
+
+.slides-container.is-visible .slides-top-shadow {
+  opacity: 0;
+  transform: translateY(-50px);
 }
 
 /* Timeline Progress Overlay */

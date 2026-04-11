@@ -89,6 +89,7 @@ export const SlidesSection: React.FC = () => {
       className={`slides-container ${isFullyVisible ? 'is-visible' : ''}`}
       onScroll={handleScroll}
     >
+      <div className="slides-top-shadow"></div>
       {slides.map((slide, index) => {
         const isLast = index === slides.length - 1;
         return (

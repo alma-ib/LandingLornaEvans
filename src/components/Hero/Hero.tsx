@@ -12,12 +12,19 @@ export const Hero: React.FC = () => {
   return (
     <section className="hero">
       <div className="stars-bg"></div>
-      <div className="hero-content">
-        <h1 className="hero-title">Exploring the Digital Universe</h1>
-        <p className="hero-subtitle">Frontend Developer & Space Enthusiast</p>
-        <button className="cta-button" onClick={scrollToSlides}>
-          Begin Journey
-        </button>
+      <div className="hero-container">
+        <div className="hero-text">
+          <h1 className="hero-title">Exploring the Digital Universe</h1>
+          <p className="hero-subtitle">Frontend Developer & Space Enthusiast</p>
+          <button className="cta-button" onClick={scrollToSlides}>
+            Begin Journey
+          </button>
+        </div>
+        <div className="hero-image">
+          <div className="hero-img-frame">
+            <img src="/images/LornaFull.avif" alt="Lorna" className="hero-img" />
+          </div>
+        </div>
       </div>
     </section>
   );
