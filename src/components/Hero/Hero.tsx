@@ -14,10 +14,10 @@ export const Hero: React.FC = () => {
       <div className="stars-bg"></div>
       <div className="hero-container">
         <div className="hero-text">
-          <h1 className="hero-title">Exploring the Digital Universe</h1>
-          <p className="hero-subtitle">Frontend Developer & Space Enthusiast</p>
+          <h1 className="hero-title">De Argentina a la NASA, con la Luna en la mira</h1>
+          <p className="hero-subtitle">Médica aeroespacial, referente científica y futura protagonista de las próximas misiones espaciales.</p>
           <button className="cta-button" onClick={scrollToSlides}>
-            Begin Journey
+            Conocé su Historia
           </button>
         </div>
         <div className="hero-image">
