@@ -63,6 +63,8 @@ export const SlidesSection: React.FC = () => {
       title: 'Orbital Mechanics',
       description: 'Navigating complex codebases with precision and maintaining stable orbits in dynamic environments.',
       imageUrl: '/images/art002e009288orig.jpg',
+      sideImage: '/images/LornaInstagramPhone.png',
+      sideImageLink: 'https://www.instagram.com/lorna.am/',
       buttonText: 'Systems Check'
     },
     {

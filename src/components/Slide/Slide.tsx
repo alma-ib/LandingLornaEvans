@@ -1,4 +1,5 @@
 import React from 'react';
+import { ParallaxImage } from '../ParallaxImage/ParallaxImage';
 import './Slide.css';
 
 interface SlideProps {
@@ -7,12 +8,13 @@ interface SlideProps {
   description: string;
   imageUrl: string;
   sideImage?: string;
+  sideImageLink?: string;
   sideElement?: React.ReactNode;
   buttonText?: string;
   children?: React.ReactNode;
 }
 
-export const Slide: React.FC<SlideProps> = ({ title, description, imageUrl, sideImage, sideElement, buttonText, id, children }) => {
+export const Slide: React.FC<SlideProps> = ({ title, description, imageUrl, sideImage, sideImageLink, sideElement, buttonText, id, children }) => {
   return (
     <div className="slide">
       <div className="slide-hero" style={{ backgroundImage: `url(${imageUrl})` }}>
@@ -27,7 +29,17 @@ export const Slide: React.FC<SlideProps> = ({ title, description, imageUrl, side
             </div>
             {(sideElement || sideImage) && (
               <div className="slide-side-image-wrapper">
-                {sideElement ? sideElement : <img src={sideImage} alt={title} className="slide-side-image" />}
+                {sideElement ? sideElement : (
+                  sideImage && (
+                    sideImageLink ? (
+                      <a href={sideImageLink} target="_blank" rel="noopener noreferrer" className="slide-side-link">
+                        <ParallaxImage src={sideImage} alt={title} className="slide-side-image" />
+                      </a>
+                    ) : (
+                      <ParallaxImage src={sideImage} alt={title} className="slide-side-image" />
+                    )
+                  )
+                )}
               </div>
             )}
           </div>
