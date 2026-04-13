@@ -5,7 +5,7 @@ export const Hero: React.FC = () => {
   const [showArrow, setShowArrow] = useState(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setTimeout>;
 
     const handleScroll = () => {
       if (window.scrollY > 20 || window.pageYOffset > 20) {
