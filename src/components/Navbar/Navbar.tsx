@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Navbar.css';
 
 export const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // More sensitive detection
+      setScrolled(window.pageYOffset > 10 || document.documentElement.scrollTop > 10);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -15,9 +25,9 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
-        <button className="navbar-home" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+        <button className="navbar-home" onClick={() => window.location.reload()}>
           Lorna Evans
         </button>
         

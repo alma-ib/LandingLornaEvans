@@ -128,6 +128,42 @@
   }
 }
 
+/* Scroll Arrow Indicator */
+.scroll-arrow {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+}
+
+.scroll-arrow.visible {
+  opacity: 0.6; /* Softer opacity */
+  pointer-events: auto;
+}
+
+.arrow-icon {
+  width: 15px; /* Much smaller */
+  height: 15px; /* Much smaller */
+  border-bottom: 2px solid var(--color-text-muted); /* Match subtitle color */
+  border-right: 2px solid var(--color-text-muted);
+  transform: rotate(45deg); 
+  animation: bounceSoft 2.5s ease-in-out infinite;
+}
+
+@keyframes bounceSoft {
+  0%, 100% {
+    transform: rotate(45deg) translate(0, 0);
+  }
+  50% {
+    transform: rotate(45deg) translate(-4px, -4px); /* Moves along the 45deg axis */
+  }
+}
+
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
   .hero-container {
