@@ -28,7 +28,7 @@ export const SlidesSection: React.FC = () => {
       title: 'La Luna como próximo objetivo',
       description: 'Su meta es formar parte de futuras misiones espaciales y convertirse en astronauta. Con la mirada puesta en la Luna, Lorna podría hacer historia para Argentina.',
       imageUrl: '/images/art002e012702~large.jpg',
-      buttonText: 'Initialize Signal'
+      buttonText: 'Ver Mas'
     }
   ];
 
