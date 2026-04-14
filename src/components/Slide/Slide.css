@@ -1,7 +1,15 @@
+/* Scroll-triggered fade-in for each slide */
 .slide {
   width: 100%;
-  scroll-snap-align: start; /* CRITICAL: snap alignment */
   position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.slide.slide-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .slide-hero {
@@ -10,6 +18,32 @@
   background-size: cover;
   background-position: center;
   position: relative;
+}
+
+/* Fade superior: suaviza la entrada desde la sección anterior */
+.slide-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 18vh;
+  background: linear-gradient(to bottom, var(--color-bg), transparent);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Fade inferior: suaviza la salida hacia la sección siguiente */
+.slide-hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 18vh;
+  background: linear-gradient(to top, var(--color-bg), transparent);
+  z-index: 10;
+  pointer-events: none;
 }
 
 .slide-overlay {
