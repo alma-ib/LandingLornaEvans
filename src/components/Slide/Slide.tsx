@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ParallaxImage } from '../ParallaxImage/ParallaxImage';
 import './Slide.css';
 
@@ -15,8 +15,27 @@ interface SlideProps {
 }
 
 export const Slide: React.FC<SlideProps> = ({ title, description, imageUrl, sideImage, sideImageLink, sideElement, buttonText, id, children }) => {
+  const slideRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = slideRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('slide-visible');
+        }
+      },
+      { threshold: 0.08 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="slide">
+    <div className="slide" ref={slideRef}>
       <div className="slide-hero" style={{ backgroundImage: `url(${imageUrl})` }}>
         <div className="slide-overlay">
           <div className="slide-inner-container">

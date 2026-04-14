@@ -3,8 +3,8 @@
   width: 100%;
   position: relative;
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(50px);
+  transition: opacity 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .slide.slide-visible {
@@ -27,8 +27,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 18vh;
-  background: linear-gradient(to bottom, var(--color-bg), transparent);
+  height: 28vh;
+  background: linear-gradient(to bottom, var(--color-bg) 0%, rgba(3, 0, 20, 0.6) 40%, transparent 100%);
   z-index: 10;
   pointer-events: none;
 }
@@ -40,8 +40,8 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 18vh;
-  background: linear-gradient(to top, var(--color-bg), transparent);
+  height: 28vh;
+  background: linear-gradient(to top, var(--color-bg) 0%, rgba(3, 0, 20, 0.6) 40%, transparent 100%);
   z-index: 10;
   pointer-events: none;
 }
