@@ -1,14 +1,17 @@
-import { Navbar } from './components/Navbar/Navbar';
-import { Hero } from './components/Hero/Hero';
-import { SlidesSection } from './components/SlidesSection/SlidesSection';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/Home';
+import { LornaEvans } from './pages/LornaEvans';
 
 function App() {
   return (
-    <div className="app">
-      <Navbar />
-      <Hero />
-      <SlidesSection />
-    </div>
+    <Router>
+      <div className="app">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/lornaevans" element={<LornaEvans />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 export const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,7 +32,7 @@ export const Navbar: React.FC = () => {
         <button className="navbar-home" onClick={() => window.location.reload()}>
           Lorna Evans
         </button>
-        
+
         <button className={`menu-toggle ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu} aria-label="Toggle Menu">
           <span className="bar"></span>
           <span className="bar"></span>
@@ -45,6 +47,7 @@ export const Navbar: React.FC = () => {
         </div>
 
         <ul className="menu-links">
+          <li><button onClick={() => { setIsMenuOpen(false); navigate('/'); }} style={{ color: 'var(--color-accent)', textShadow: '0 0 10px var(--color-accent-glow)' }}>ALMA-IB</button></li>
           <li><button onClick={() => console.log('Noticias')}>Noticias</button></li>
           <li><button onClick={() => console.log('Blog')}>Blog</button></li>
           <li><button onClick={() => scrollToSection('footer')}>Contacto</button></li>
