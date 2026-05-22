@@ -1,19 +1,124 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 import { Footer } from '../components/Footer/Footer';
 import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
 import './Home.css';
 
 export const Home: React.FC = () => {
+  const videoRef    = useRef<HTMLVideoElement>(null);
+  const logoFixedRef = useRef<HTMLDivElement>(null);
+  const logoFlowRef  = useRef<HTMLDivElement>(null);
+
+  // ── Effect 1: unlock video for programmatic seeking ─────────────────────
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const unlock = () => {
+      video.play()
+        .then(() => { video.pause(); video.currentTime = 0; })
+        .catch(() => {});
+    };
+    if (video.readyState >= 2) unlock();
+    else video.addEventListener('canplay', unlock, { once: true });
+  }, []);
+
+  // ── Effect 2: video scroll-scrubbing (independent rAF loop) ──────────────
+  useEffect(() => {
+    let rafId: number;
+    let lastScrollY = -1;
+
+    const scrub = () => {
+      const scrollY = window.pageYOffset;
+      if (scrollY !== lastScrollY) {
+        lastScrollY = scrollY;
+        const video = videoRef.current;
+        if (video && video.duration > 0) {
+          // Linear scrub: full hero height (100vh) maps to full video duration
+          const progress = Math.min(scrollY / window.innerHeight, 1);
+          video.currentTime = progress * video.duration;
+        }
+      }
+      rafId = requestAnimationFrame(scrub);
+    };
+
+    rafId = requestAnimationFrame(scrub);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
+
+  // ── Effect 3: logo scroll animation (independent rAF loop) ───────────────
+  useEffect(() => {
+    let rafId: number;
+    let lastScrollY = -1;
+
+    const animate = () => {
+      const scrollY = window.pageYOffset;
+      if (scrollY !== lastScrollY) {
+        lastScrollY = scrollY;
+
+        const logo = logoFixedRef.current;
+        if (logo) {
+          const heroHeight = window.innerHeight;
+
+          // Animation completes when user reaches 60% of hero scroll
+          const raw = Math.min(scrollY / (heroHeight * 0.6), 1);
+          // easeInOut
+          const p = raw < 0.5
+            ? 2 * raw * raw
+            : 1 - Math.pow(-2 * raw + 2, 2) / 2;
+
+          // Target: left side of fixed header
+          // Navbar padding: 40px desktop, 20px mobile → logo center lands there
+          const endX = window.innerWidth < 768 ? 50 : 76;
+          const endY = 33; // center of 65px-tall scrolled header
+
+          // CSS owns left:50vw top:42vh — only transform is touched here
+          const dx = (endX - window.innerWidth  * 0.5) * p;
+          const dy = (endY - window.innerHeight * 0.42) * p;
+
+          // Scale: 120px → 70px  (ratio ≈ 0.583)
+          const scale = 1 - (1 - 70 / 120) * p;
+
+          logo.style.transform =
+            `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${scale.toFixed(4)})`;
+        }
+      }
+      rafId = requestAnimationFrame(animate);
+    };
+
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
+  }, []);
+
   return (
     <div className="home-container">
       <GlobalHeader />
+
+      {/* Fixed animated logo */}
+      <div ref={logoFixedRef} className="alma-logo-fixed">
+        <img src="/images/Alma-ib/logo-alma-ib.png" alt="ALMA-IB" />
+      </div>
+
       {/* Hero Section */}
       <section className="home-hero">
         <div className="stars-bg"></div>
-        <div className="home-hero-video-placeholder"></div>
+
+        {/* Scroll-scrubbed video background */}
+        <video
+          ref={videoRef}
+          className="home-hero-video"
+          muted
+          playsInline
+          preload="auto"
+        >
+          <source src="/images/Alma-ib/10343918-hd_24fps_H264.mp4" type="video/mp4" />
+        </video>
+        <div className="home-hero-video-overlay"></div>
+
         <div className="home-hero-content">
-          <div className="alma-logo-placeholder">ALMA</div>
+          {/* Invisible spacer that keeps layout as if logo were in flow */}
+          <div ref={logoFlowRef} className="alma-logo-flow">
+            <img src="/images/Alma-ib/logo-alma-ib.png" alt="" aria-hidden="true" />
+          </div>
           <h1 className="home-hero-title">ALMA-IB</h1>
           <h2 className="home-hero-subtitle">Asociación Latinoamericana de Medicina Aeroespacial, Ingeniería y Biotecnología</h2>
         </div>

@@ -14,13 +14,24 @@
   background-color: var(--color-bg);
 }
 
-.home-hero-video-placeholder {
+/* Scroll-scrubbed video background */
+.home-hero-video {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(rgba(3, 0, 20, 0.7), rgba(3, 0, 20, 0.9)), #111;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.home-hero-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(3, 0, 20, 0.45), rgba(3, 0, 20, 0.85));
   z-index: 1;
 }
 
@@ -33,21 +44,44 @@
   animation: fadeInUp 1.2s ease-out;
 }
 
-.alma-logo-placeholder {
+/* Invisible spacer — reserves vertical space for the logo in flow */
+.alma-logo-flow {
   width: 120px;
-  height: 120px;
-  margin: 0 auto 2rem;
-  border-radius: 50%;
-  background: rgba(0, 243, 255, 0.1);
-  border: 2px solid var(--color-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--color-accent);
-  box-shadow: 0 0 30px var(--color-accent-glow);
+  height: 80px;
+  margin: 0 auto 1.5rem;
+}
+
+.alma-logo-flow img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  visibility: hidden;
+}
+
+/* Fixed logo — 120px initial, shrinks to ~70px inside header on scroll.
+   Only transform is modified by JS; left and top are CSS-owned. */
+.alma-logo-fixed {
+  position: fixed;
+  left: 50vw;
+  top: 42vh; /* matches JS constant: window.innerHeight * 0.42 */
+  transform: translate(-50%, -50%);
+  width: 120px;
+  z-index: 1001;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.alma-logo-fixed img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 14px rgba(0, 243, 255, 0.45));
+}
+
+@media (max-width: 480px) {
+  .alma-logo-fixed { width: 90px; }
+  .alma-logo-flow  { width: 90px; height: 60px; }
 }
 
 .home-hero-title {
