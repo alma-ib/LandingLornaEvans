@@ -10,11 +10,10 @@ export const Hero: React.FC = () => {
     const handleScroll = () => {
       if (window.scrollY > 20 || window.pageYOffset > 20) {
         setShowArrow(false);
-        clearTimeout(timer); // Cancel timer if user scrolls early
+        clearTimeout(timer);
       }
     };
 
-    // Only set the timer if we are at the top
     if (window.scrollY <= 20) {
       timer = setTimeout(() => {
         if (window.scrollY <= 20 && window.pageYOffset <= 20) {
@@ -24,7 +23,6 @@ export const Hero: React.FC = () => {
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
     return () => {
       clearTimeout(timer);
       window.removeEventListener('scroll', handleScroll);
@@ -41,6 +39,13 @@ export const Hero: React.FC = () => {
 
   return (
     <section className="hero">
+      <img
+        src="/images/Argentina-Plan-Espacial-Espacio-1140x570-jpg.webp"
+        alt=""
+        className="hero-bg-image"
+        aria-hidden="true"
+      />
+      <div className="hero-overlay"></div>
       <div className="stars-bg"></div>
       <div className="hero-container">
         <div className="hero-text">
