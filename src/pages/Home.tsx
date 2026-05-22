@@ -21,12 +21,28 @@ export const Home: React.FC = () => {
 
       {/* Sponsors Bar */}
       <section className="sponsors-bar">
-        <div className="sponsors-track">
-           <div className="sponsor-item">ACEMA</div>
-           <div className="sponsor-item">AeroBar</div>
-           <div className="sponsor-item">Astronomía Gualeguay</div>
-           <div className="sponsor-item">Zonodev</div>
-           <div className="sponsor-item">Space Tech</div>
+        <div className="sponsors-inner">
+          <div className="sponsors-header">
+            <h2 className="sponsors-title">Partners & Sponsors</h2>
+            <p className="sponsors-subtitle">
+              Gracias a quienes hacen posible esta misión. Si tu organización quiere ser parte de un proyecto que inspira a la próxima generación espacial latinoamericana, ¡sumate!
+            </p>
+            <a href="#contacto" className="cta-button sponsors-cta">Quiero ser sponsor</a>
+          </div>
+          <div className="sponsors-track">
+          <div className="sponsor-item">
+            <img src="/images/ALMA-IB/acema2.png" alt="ACEMA" className="sponsor-logo" />
+          </div>
+          <div className="sponsor-item">
+            <img src="/images/ALMA-IB/AeroBar_20251215_234114_0000.webp" alt="AeroBar" className="sponsor-logo" />
+          </div>
+          <div className="sponsor-item">
+            <img src="/images/ALMA-IB/AtronomiaGualeguayLogoNuevo.webp" alt="Astronomía Gualeguay" className="sponsor-logo" />
+          </div>
+          <div className="sponsor-item">
+            <img src="/images/ALMA-IB/zonodev transparente.png" alt="Zonodev" className="sponsor-logo" />
+          </div>
+        </div>
         </div>
       </section>
 

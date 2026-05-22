@@ -52,7 +52,7 @@ export const Hero: React.FC = () => {
         </div>
         <div className="hero-image">
           <div className="hero-img-frame">
-            <img src="/images/LornaFull.avif" alt="Lorna" className="hero-img" />
+            <img src="/images/LornaEvans/LornaFull.avif" alt="Lorna" className="hero-img" />
           </div>
         </div>
       </div>

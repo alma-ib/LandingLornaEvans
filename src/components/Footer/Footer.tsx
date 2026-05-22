@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
       <div className="footer-content">
         <a href="https://zonodev.ar/es/" target="_blank" rel="noopener noreferrer" className="footer-branding">
           <div className="footer-logo-container">
-            <img src="/images/zonodevLogo.png" alt="Zonodev Logo" className="footer-logo" />
+            <img src="/images/LornaEvans/zonodevLogo.png" alt="Zonodev Logo" className="footer-logo" />
             <h2>Zonodev</h2>
           </div>
           <p>Sistemas de Gestión y Desarrollo Web</p>
