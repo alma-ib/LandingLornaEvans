@@ -1,162 +1,423 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Footer } from '../components/Footer/Footer';
 import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
 import './Home.css';
 
+interface Course {
+  id: number;
+  title: string;
+  description: string;
+  dateTime: string;
+  imageUrl: string;
+}
+
+const COURSES: Course[] = [
+  {
+    id: 1,
+    title: "Astronomía avanzada",
+    description: "Profundiza tus conocimientos sobre el universo con expertos de la región. Exploración de agujeros negros, cosmología y evolución estelar.",
+    dateTime: "15/07/2026",
+    imageUrl: "/images/ALMA-IB/curso-astronomia.png",
+  },
+  {
+    id: 2,
+    title: "Mi primer telescopio",
+    description: "Aprende a usar, alinear y mantener tu equipo óptico. Ideal para principiantes que quieren dar sus primeros pasos en la observación del cielo nocturno.",
+    dateTime: "22/07/2026",
+    imageUrl: "/images/ALMA-IB/curso-telescopio.png",
+  },
+  {
+    id: 3,
+    title: "Medicina Aeroespacial",
+    description: "Estudia los efectos de los vuelos espaciales y la microgravedad en el cuerpo humano, y los desafíos para los futuros viajes interplanetarios de larga duración.",
+    dateTime: "5/08/2026",
+    imageUrl: "/images/ALMA-IB/curso-medicina.png",
+  },
+  {
+    id: 4,
+    title: "Cohetería Experimental",
+    description: "Aprende los principios físicos, diseño y aerodinámica de cohetes propulsados por combustible sólido. Talleres prácticos de simulación y construcción.",
+    dateTime: "12/10/2026",
+    imageUrl: "/images/ALMA-IB/curso-coheteria.png",
+  },
+];
+
+interface EventItem {
+  id: number;
+  title: string;
+  description: string;
+  dateTime: string;
+  imageUrl: string;
+}
+
+const EVENTS: EventItem[] = [
+  {
+    id: 1,
+    title: "Jornada de Cohetería",
+    description: "Participa en talleres prácticos y lanzamientos reales de cohetes propulsados por combustible sólido y agua.",
+    dateTime: "12/09/2026",
+    imageUrl: "/images/ALMA-IB/evento-coheteria.png",
+  },
+  {
+    id: 2,
+    title: "Congreso de Medicina Aeroespacial",
+    description: "Reunión anual con los mayores exponentes del continente para discutir los avances en medicina y fisiología del espacio.",
+    dateTime: "15/10/2026",
+    imageUrl: "/images/ALMA-IB/evento-congreso.png",
+  },
+  {
+    id: 3,
+    title: "Observación de Lluvia de Estrellas",
+    description: "Una noche única de observación astronómica con telescopios avanzados guiada por astrónomos profesionales.",
+    dateTime: "10/11/2026",
+    imageUrl: "/images/ALMA-IB/evento-observacion.png",
+  },
+  {
+    id: 4,
+    title: "Taller de Satélites CanSat",
+    description: "Diseña, integra y programa tu propio satélite a escala en lata y prepárate para los lanzamientos de prueba.",
+    dateTime: "05/12/2026",
+    imageUrl: "/images/ALMA-IB/evento-satelite.png",
+  },
+];
+
+interface NewsItem {
+  id: number;
+  title: string;
+  description: string;
+  dateTime: string;
+  imageUrl: string;
+}
+
+const NEWS: NewsItem[] = [
+  {
+    id: 1,
+    title: "Nuevo convenio con Universidades",
+    description: "Expandimos nuestras alianzas estratégicas para fomentar la investigación aeroespacial en estudiantes de grado de toda la región.",
+    dateTime: "28/05/2026",
+    imageUrl: "/images/ALMA-IB/noticia-convenio.png",
+  },
+  {
+    id: 2,
+    title: "Lanzamiento exitoso del CanSat 2026",
+    description: "El último proyecto de satélite estudiantil supera todas las expectativas y logra recopilar valiosos datos atmosféricos.",
+    dateTime: "02/06/2026",
+    imageUrl: "/images/ALMA-IB/noticia-cansat.png",
+  },
+  {
+    id: 3,
+    title: "Beca de Investigación Aeroespacial",
+    description: "Se abren las postulaciones para la beca de investigación anual destinada a proyectos de medicina y biotecnología del espacio.",
+    dateTime: "05/06/2026",
+    imageUrl: "/images/ALMA-IB/noticia-beca.png",
+  },
+  {
+    id: 4,
+    title: "Webinar de Lorna Evans sobre la NASA",
+    description: "No te pierdas este webinar interactivo con Lorna Evans compartiendo sus experiencias de trabajo y colaboración con la NASA.",
+    dateTime: "08/06/2026",
+    imageUrl: "/images/ALMA-IB/noticia-charla.png",
+  },
+];
+
 export const Home: React.FC = () => {
-  const videoRef    = useRef<HTMLVideoElement>(null);
-  const logoFixedRef = useRef<HTMLDivElement>(null);
-  const logoFlowRef  = useRef<HTMLDivElement>(null);
+  const [currentCourseIndex, setCurrentCourseIndex] = useState(0);
+  const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // ── Effect 1: unlock video for programmatic seeking ─────────────────────
+  // Drag states for Courses
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+
+  // States and Drag states for Events
+  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  const [isEventDragging, setIsEventDragging] = useState(false);
+  const [eventDragStartX, setEventDragStartX] = useState(0);
+  const [eventDragOffset, setEventDragOffset] = useState(0);
+
+  // States and Drag states for News
+  const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+  const [isNewsDragging, setIsNewsDragging] = useState(false);
+  const [newsDragStartX, setNewsDragStartX] = useState(0);
+  const [newsDragOffset, setNewsDragOffset] = useState(0);
+
+  // Form states
+  const [contactNombre, setContactNombre] = useState("");
+  const [contactApellido, setContactApellido] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactMotivo, setContactMotivo] = useState("");
+  const [contactMensaje, setContactMensaje] = useState("");
+
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    const unlock = () => {
-      video.play()
-        .then(() => { video.pause(); video.currentTime = 0; })
-        .catch(() => {});
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
     };
-    if (video.readyState >= 2) unlock();
-    else video.addEventListener('canplay', unlock, { once: true });
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // ── Effect 2: video scroll-scrubbing (independent rAF loop) ──────────────
+  // Sync indices on resize
   useEffect(() => {
-    let rafId: number;
-    let lastScrollY = -1;
+    const maxIndex = isMobile ? COURSES.length - 1 : COURSES.length - 2;
+    if (currentCourseIndex > maxIndex) {
+      setCurrentCourseIndex(maxIndex);
+    }
+  }, [isMobile, currentCourseIndex]);
 
-    const scrub = () => {
-      const scrollY = window.pageYOffset;
-      if (scrollY !== lastScrollY) {
-        lastScrollY = scrollY;
-        const video = videoRef.current;
-        if (video && video.duration > 0) {
-          // Linear scrub: full hero height (100vh) maps to full video duration
-          const progress = Math.min(scrollY / window.innerHeight, 1);
-          video.currentTime = progress * video.duration;
-        }
-      }
-      rafId = requestAnimationFrame(scrub);
+  useEffect(() => {
+    const maxIndex = isMobile ? EVENTS.length - 1 : EVENTS.length - 2;
+    if (currentEventIndex > maxIndex) {
+      setCurrentEventIndex(maxIndex);
+    }
+  }, [isMobile, currentEventIndex]);
+
+  useEffect(() => {
+    const maxIndex = isMobile ? NEWS.length - 1 : NEWS.length - 2;
+    if (currentNewsIndex > maxIndex) {
+      setCurrentNewsIndex(maxIndex);
+    }
+  }, [isMobile, currentNewsIndex]);
+
+  // Navigation helpers for Courses
+  const nextSlide = () => {
+    const totalSlides = isMobile ? COURSES.length : COURSES.length - 1;
+    setCurrentCourseIndex((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    const totalSlides = isMobile ? COURSES.length : COURSES.length - 1;
+    setCurrentCourseIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const setSlide = (index: number) => {
+    setCurrentCourseIndex(index);
+  };
+
+  // Navigation helpers for Events
+  const nextEventSlide = () => {
+    const totalSlides = isMobile ? EVENTS.length : EVENTS.length - 1;
+    setCurrentEventIndex((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevEventSlide = () => {
+    const totalSlides = isMobile ? EVENTS.length : EVENTS.length - 1;
+    setCurrentEventIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const setEventSlide = (index: number) => {
+    setCurrentEventIndex(index);
+  };
+
+  // Navigation helpers for News
+  const nextNewsSlide = () => {
+    const totalSlides = isMobile ? NEWS.length : NEWS.length - 1;
+    setCurrentNewsIndex((prev) => (prev + 1) % totalSlides);
+  };
+
+  const prevNewsSlide = () => {
+    const totalSlides = isMobile ? NEWS.length : NEWS.length - 1;
+    setCurrentNewsIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+  };
+
+  const setNewsSlide = (index: number) => {
+    setCurrentNewsIndex(index);
+  };
+
+  // Courses drag handlers
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+    setIsDragging(true);
+    setDragStartX(e.clientX);
+    setDragOffset(0);
+    setIsAutoplayPaused(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return;
+    const currentX = e.clientX;
+    const diff = currentX - dragStartX;
+    setDragOffset(diff);
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
+
+    const threshold = 60;
+    const totalSlides = isMobile ? COURSES.length : COURSES.length - 1;
+
+    if (dragOffset < -threshold) {
+      setCurrentCourseIndex((prev) => (prev + 1) % totalSlides);
+    } else if (dragOffset > threshold) {
+      setCurrentCourseIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+    }
+
+    setDragOffset(0);
+    setIsAutoplayPaused(false);
+  };
+
+  // Events drag handlers
+  const handleEventPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+    setIsEventDragging(true);
+    setEventDragStartX(e.clientX);
+    setEventDragOffset(0);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handleEventPointerMove = (e: React.PointerEvent) => {
+    if (!isEventDragging) return;
+    const currentX = e.clientX;
+    const diff = currentX - eventDragStartX;
+    setEventDragOffset(diff);
+  };
+
+  const handleEventPointerUp = (e: React.PointerEvent) => {
+    if (!isEventDragging) return;
+    setIsEventDragging(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
+
+    const threshold = 60;
+    const totalSlides = isMobile ? EVENTS.length : EVENTS.length - 1;
+
+    if (eventDragOffset < -threshold) {
+      setCurrentEventIndex((prev) => (prev + 1) % totalSlides);
+    } else if (eventDragOffset > threshold) {
+      setCurrentEventIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+    }
+
+    setEventDragOffset(0);
+  };
+
+  // News drag handlers
+  const handleNewsPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    if ((e.target as HTMLElement).closest('button')) return;
+    setIsNewsDragging(true);
+    setNewsDragStartX(e.clientX);
+    setNewsDragOffset(0);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handleNewsPointerMove = (e: React.PointerEvent) => {
+    if (!isNewsDragging) return;
+    const currentX = e.clientX;
+    const diff = currentX - newsDragStartX;
+    setNewsDragOffset(diff);
+  };
+
+  const handleNewsPointerUp = (e: React.PointerEvent) => {
+    if (!isNewsDragging) return;
+    setIsNewsDragging(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
+
+    const threshold = 60;
+    const totalSlides = isMobile ? NEWS.length : NEWS.length - 1;
+
+    if (newsDragOffset < -threshold) {
+      setCurrentNewsIndex((prev) => (prev + 1) % totalSlides);
+    } else if (newsDragOffset > threshold) {
+      setCurrentNewsIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+    }
+
+    setNewsDragOffset(0);
+  };
+
+  const handleEnroll = (courseTitle: string) => {
+    setContactMotivo("curso");
+    setContactMensaje(`Hola, me gustaría inscribirme en el curso de ${courseTitle}.`);
+    document.getElementById("contacto")?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleEventEnroll = (eventTitle: string) => {
+    setContactMotivo("evento");
+    setContactMensaje(`Hola, me gustaría obtener más información e inscribirme en el evento: ${eventTitle}.`);
+    document.getElementById("contacto")?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleNewsReadMore = (newsTitle: string) => {
+    setContactMotivo("consulta");
+    setContactMensaje(`Hola, me gustaría recibir más información sobre la noticia: "${newsTitle}".`);
+    document.getElementById("contacto")?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    if (isAutoplayPaused) return;
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isAutoplayPaused]);
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.12,
     };
 
-    rafId = requestAnimationFrame(scrub);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
-
-  // ── Effect 3: logo scroll animation (independent rAF loop) ───────────────
-  useEffect(() => {
-    let rafId: number;
-    let lastScrollY = -1;
-
-    const animate = () => {
-      const scrollY = window.pageYOffset;
-      if (scrollY !== lastScrollY) {
-        lastScrollY = scrollY;
-
-        const logo = logoFixedRef.current;
-        if (logo) {
-          const heroHeight = window.innerHeight;
-
-          // Animation completes when user reaches 60% of hero scroll
-          const raw = Math.min(scrollY / (heroHeight * 0.6), 1);
-          // easeInOut
-          const p = raw < 0.5
-            ? 2 * raw * raw
-            : 1 - Math.pow(-2 * raw + 2, 2) / 2;
-
-          // Target: left side of fixed header
-          // Navbar padding: 40px desktop, 20px mobile → logo center lands there
-          const endX = window.innerWidth < 768 ? 50 : 76;
-          const endY = 33; // center of 65px-tall scrolled header
-
-          // CSS owns left:50vw top:42vh — only transform is touched here
-          const dx = (endX - window.innerWidth  * 0.5) * p;
-          const dy = (endY - window.innerHeight * 0.42) * p;
-
-          // Scale: 120px → 70px  (ratio ≈ 0.583)
-          const scale = 1 - (1 - 70 / 120) * p;
-
-          logo.style.transform =
-            `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${scale.toFixed(4)})`;
+    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        } else {
+          entry.target.classList.remove('visible');
         }
-      }
-      rafId = requestAnimationFrame(animate);
+      });
     };
 
-    rafId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafId);
+    const observer = new IntersectionObserver(handleIntersect, observerOptions);
+    const elementsToReveal = document.querySelectorAll('.reveal');
+    elementsToReveal.forEach((el) => observer.observe(el));
+
+    return () => {
+      elementsToReveal.forEach((el) => observer.unobserve(el));
+    };
   }, []);
 
   return (
     <div className="home-container">
       <GlobalHeader />
 
-      {/* Fixed animated logo */}
-      <div ref={logoFixedRef} className="alma-logo-fixed">
-        <img src="/images/Alma-ib/logo-alma-ib.png" alt="ALMA-IB" />
-      </div>
 
       {/* Hero Section */}
       <section className="home-hero">
         <div className="stars-bg"></div>
 
-        {/* Scroll-scrubbed video background */}
+        {/* Autoplay looping video background */}
         <video
-          ref={videoRef}
           className="home-hero-video"
           muted
           playsInline
           preload="auto"
+          autoPlay
+          loop
         >
-          <source src="/images/Alma-ib/10343918-hd_24fps_H264.mp4" type="video/mp4" />
+          <source src="/images/ALMA-IB/10343918-hd_24fps_H264.mp4" type="video/mp4" />
         </video>
         <div className="home-hero-video-overlay"></div>
 
         <div className="home-hero-content">
-          {/* Invisible spacer that keeps layout as if logo were in flow */}
-          <div ref={logoFlowRef} className="alma-logo-flow">
-            <img src="/images/Alma-ib/logo-alma-ib.png" alt="" aria-hidden="true" />
+          {/* Logo inside the Hero content */}
+          <div className="alma-logo-hero">
+            <img src="/images/ALMA-IB/logo-alma-ib.png" alt="ALMA-IB Logo" />
           </div>
           <h1 className="home-hero-title">ALMA-IB</h1>
           <h2 className="home-hero-subtitle">Asociación Latinoamericana de Medicina Aeroespacial, Ingeniería y Biotecnología</h2>
         </div>
       </section>
 
-      {/* Sponsors Bar */}
-      <section className="sponsors-bar">
-        <div className="sponsors-inner">
-          <div className="sponsors-header">
-            <h2 className="sponsors-title">Partners & Sponsors</h2>
-            <p className="sponsors-subtitle">
-              Gracias a quienes hacen posible esta misión. Si tu organización quiere ser parte de un proyecto que inspira a la próxima generación espacial latinoamericana, ¡sumate!
-            </p>
-            <a href="#contacto" className="cta-button sponsors-cta">Quiero ser sponsor</a>
-          </div>
-          <div className="sponsors-track">
-          <div className="sponsor-item">
-            <img src="/images/ALMA-IB/acema2.png" alt="ACEMA" className="sponsor-logo" />
-          </div>
-          <div className="sponsor-item">
-            <img src="/images/ALMA-IB/AeroBar_20251215_234114_0000.webp" alt="AeroBar" className="sponsor-logo" />
-          </div>
-          <div className="sponsor-item">
-            <img src="/images/ALMA-IB/AtronomiaGualeguayLogoNuevo.webp" alt="Astronomía Gualeguay" className="sponsor-logo" />
-          </div>
-          <div className="sponsor-item">
-            <img src="/images/ALMA-IB/zonodev transparente.png" alt="Zonodev" className="sponsor-logo" />
-          </div>
-        </div>
-        </div>
-      </section>
-
       {/* NOSOTROS */}
       <section id="nosotros" className="home-section">
-        <h2 className="section-title">NOSOTROS</h2>
-        <div className="section-content-center">
+        <h2 className="section-title reveal">NOSOTROS</h2>
+        <div className="section-content-center reveal reveal-scale reveal-delay-1">
           <p className="section-description">
-            Nuestra misión es impulsar la ciencia y tecnología aeroespacial en Latinoamérica, conectando profesionales y entusiastas en medicina, ingeniería y biotecnología.
+            La Asociación Latinoamericana de Medicina Aeroespacial, Ingeniería y Biotecnología (ALMA-IB) impulsa el desarrollo científico, tecnológico y académico del sector aeroespacial en América Latina. Unimos especialistas, instituciones, empresas y comunidades educativas para fortalecer la investigación e innovación espacial en la región.
           </p>
           <button className="cta-button">Ver más</button>
         </div>
@@ -164,88 +425,298 @@ export const Home: React.FC = () => {
 
       {/* CURSOS */}
       <section id="cursos" className="home-section alt-bg">
-        <h2 className="section-title">CURSOS</h2>
-        <div className="grid-container">
-          <div className="grid-card">
-            <h3>Astronomía avanzada</h3>
-            <p>Profundiza tus conocimientos sobre el universo con expertos de la región.</p>
+        <h2 className="section-title reveal">CURSOS</h2>
+
+        <div
+          className="slideshow-wrapper reveal reveal-scale reveal-delay-1"
+          onMouseEnter={() => setIsAutoplayPaused(true)}
+          onMouseLeave={() => setIsAutoplayPaused(false)}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          style={{ touchAction: 'pan-y', cursor: isDragging ? 'grabbing' : 'grab' }}
+        >
+          {/* Controls */}
+          <button className="slideshow-arrow prev" onClick={prevSlide} aria-label="Anterior">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+
+          <button className="slideshow-arrow next" onClick={nextSlide} aria-label="Siguiente">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+
+          {/* Slides Track Outer */}
+          <div className="slideshow-track-outer">
+            <div
+              className="slideshow-track"
+              style={{
+                transform: `translateX(calc(-${currentCourseIndex * (isMobile ? 100 : 50)}% + ${dragOffset}px))`,
+                transition: isDragging ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+                pointerEvents: isDragging ? 'none' : 'auto'
+              }}
+            >
+              {COURSES.map((course) => (
+                <div className="slideshow-slide" key={course.id}>
+                  <div className="course-card">
+                    <div className="course-image-wrapper">
+                      <img src={course.imageUrl} alt={course.title} className="course-image" draggable="false" />
+                      <div className="course-image-overlay"></div>
+                    </div>
+                    <div className="course-content">
+                      <span className="course-date-badge">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        {course.dateTime}
+                      </span>
+                      <h3 className="course-title">{course.title}</h3>
+                      <p className="course-description">{course.description}</p>
+                      <button className="cta-button course-enroll-btn" onClick={() => handleEnroll(course.title)}>
+                        Inscribirse
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="grid-card">
-            <h3>Mi primer telescopio</h3>
-            <p>Aprende a usar y mantener tu equipo, ideal para principiantes.</p>
+
+          {/* Dots Indicators */}
+          <div className="slideshow-dots">
+            {Array.from({ length: isMobile ? COURSES.length : COURSES.length - 1 }).map((_, index) => (
+              <button
+                key={index}
+                className={`slideshow-dot ${index === currentCourseIndex ? 'active' : ''}`}
+                onClick={() => setSlide(index)}
+                aria-label={`Ir a diapositiva ${index + 1}`}
+              />
+            ))}
           </div>
-        </div>
-        <div className="section-action">
-          <button className="cta-button">Ver más</button>
         </div>
       </section>
 
       {/* EVENTOS */}
       <section id="eventos" className="home-section">
-        <h2 className="section-title">EVENTOS</h2>
-        <div className="grid-container">
-          <div className="grid-card">
-            <h3>Jornada de Cohetería</h3>
-            <p className="event-date">Próximamente</p>
-            <p>Participa en talleres prácticos y lanzamientos reales.</p>
+        <h2 className="section-title reveal">EVENTOS</h2>
+
+        <div
+          className="slideshow-wrapper reveal reveal-scale reveal-delay-1"
+          onPointerDown={handleEventPointerDown}
+          onPointerMove={handleEventPointerMove}
+          onPointerUp={handleEventPointerUp}
+          onPointerCancel={handleEventPointerUp}
+          style={{ touchAction: 'pan-y', cursor: isEventDragging ? 'grabbing' : 'grab' }}
+        >
+          {/* Controls */}
+          <button className="slideshow-arrow prev" onClick={prevEventSlide} aria-label="Anterior">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+
+          <button className="slideshow-arrow next" onClick={nextEventSlide} aria-label="Siguiente">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+
+          {/* Slides Track Outer */}
+          <div className="slideshow-track-outer">
+            <div
+              className="slideshow-track"
+              style={{
+                transform: `translateX(calc(-${currentEventIndex * (isMobile ? 100 : 50)}% + ${eventDragOffset}px))`,
+                transition: isEventDragging ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+                pointerEvents: isEventDragging ? 'none' : 'auto'
+              }}
+            >
+              {EVENTS.map((event) => (
+                <div className="slideshow-slide" key={event.id}>
+                  <div className="event-card">
+                    <div className="event-image-wrapper">
+                      <img src={event.imageUrl} alt={event.title} className="event-image" draggable="false" />
+                      <div className="event-image-overlay"></div>
+                    </div>
+                    <div className="event-content">
+                      <span className="event-date-badge">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        {event.dateTime}
+                      </span>
+                      <h3 className="event-title">{event.title}</h3>
+                      <p className="event-description">{event.description}</p>
+                      <button className="cta-button event-enroll-btn" onClick={() => handleEventEnroll(event.title)}>
+                        Inscribirse
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="grid-card">
-            <h3>Congreso de Medicina Aeroespacial</h3>
-            <p className="event-date">Octubre 2026</p>
-            <p>Reunión anual con los mayores exponentes del continente.</p>
+
+          {/* Dots Indicators */}
+          <div className="slideshow-dots">
+            {Array.from({ length: isMobile ? EVENTS.length : EVENTS.length - 1 }).map((_, index) => (
+              <button
+                key={index}
+                className={`slideshow-dot ${index === currentEventIndex ? 'active' : ''}`}
+                onClick={() => setEventSlide(index)}
+                aria-label={`Ir a diapositiva ${index + 1}`}
+              />
+            ))}
           </div>
-        </div>
-        <div className="section-action">
-          <button className="cta-button">Ver más</button>
         </div>
       </section>
 
       {/* NOTICIAS */}
       <section id="noticias" className="home-section alt-bg">
-        <h2 className="section-title">NOTICIAS</h2>
-        <div className="news-feed">
-          <div className="news-item">
-            <div className="news-content">
-              <h3>Nuevo convenio firmado con Universidades</h3>
-              <p>Expandimos nuestras alianzas estratégicas para fomentar la investigación en estudiantes de grado.</p>
+        <h2 className="section-title reveal">NOTICIAS</h2>
+
+        <div
+          className="slideshow-wrapper reveal reveal-scale reveal-delay-1"
+          onPointerDown={handleNewsPointerDown}
+          onPointerMove={handleNewsPointerMove}
+          onPointerUp={handleNewsPointerUp}
+          onPointerCancel={handleNewsPointerUp}
+          style={{ touchAction: 'pan-y', cursor: isNewsDragging ? 'grabbing' : 'grab' }}
+        >
+          {/* Controls */}
+          <button className="slideshow-arrow prev" onClick={prevNewsSlide} aria-label="Anterior">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+
+          <button className="slideshow-arrow next" onClick={nextNewsSlide} aria-label="Siguiente">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+
+          {/* Slides Track Outer */}
+          <div className="slideshow-track-outer">
+            <div
+              className="slideshow-track"
+              style={{
+                transform: `translateX(calc(-${currentNewsIndex * (isMobile ? 100 : 50)}% + ${newsDragOffset}px))`,
+                transition: isNewsDragging ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+                pointerEvents: isNewsDragging ? 'none' : 'auto'
+              }}
+            >
+              {NEWS.map((news) => (
+                <div className="slideshow-slide" key={news.id}>
+                  <div className="news-card">
+                    <div className="news-image-wrapper">
+                      <img src={news.imageUrl} alt={news.title} className="news-image" draggable="false" />
+                      <div className="news-image-overlay"></div>
+                    </div>
+                    <div className="news-content">
+                      <span className="news-date-badge">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        {news.dateTime}
+                      </span>
+                      <h3 className="news-title">{news.title}</h3>
+                      <p className="news-description">{news.description}</p>
+                      <button className="cta-button news-enroll-btn" onClick={() => handleNewsReadMore(news.title)}>
+                        Leer más
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="news-item">
-            <div className="news-content">
-              <h3>Lanzamiento exitoso del CanSat 2026</h3>
-              <p>El último proyecto estudiantil supera las expectativas y logra recopilar datos atmosféricos valiosos.</p>
-            </div>
+
+          {/* Dots Indicators */}
+          <div className="slideshow-dots">
+            {Array.from({ length: isMobile ? NEWS.length : NEWS.length - 1 }).map((_, index) => (
+              <button
+                key={index}
+                className={`slideshow-dot ${index === currentNewsIndex ? 'active' : ''}`}
+                onClick={() => setNewsSlide(index)}
+                aria-label={`Ir a diapositiva ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
-        <div className="section-action">
-          <button className="cta-button">Ver más</button>
+      </section>
+
+      {/* Sponsors Bar */}
+      <section className="sponsors-bar">
+        <div className="sponsors-inner">
+          <div className="sponsors-header reveal reveal-left">
+            <h2 className="sponsors-title">Partners & Sponsors</h2>
+            <p className="sponsors-subtitle">
+              Gracias a quienes hacen posible esta misión. Si tu organización quiere ser parte de un proyecto que inspira a la próxima generación espacial latinoamericana, ¡sumate!
+            </p>
+            <a href="#contacto" className="cta-button sponsors-cta">Quiero ser sponsor</a>
+          </div>
+          <div className="sponsors-track reveal reveal-right reveal-delay-1">
+            <div className="sponsor-item">
+              <img src="/images/ALMA-IB/acema2.png" alt="ACEMA" className="sponsor-logo" />
+            </div>
+            <div className="sponsor-item">
+              <img src="/images/ALMA-IB/AeroBar_20251215_234114_0000.webp" alt="AeroBar" className="sponsor-logo" />
+            </div>
+            <div className="sponsor-item">
+              <img src="/images/ALMA-IB/AtronomiaGualeguayLogoNuevo.webp" alt="Astronomía Gualeguay" className="sponsor-logo" />
+            </div>
+            <div className="sponsor-item">
+              <img src="/images/ALMA-IB/zonodev transparente.png" alt="Zonodev" className="sponsor-logo" />
+            </div>
+          </div>
         </div>
       </section>
 
       {/* CONTACTO */}
-      <section id="contacto" className="home-section">
-        <h2 className="section-title">CONTACTO</h2>
-        <div className="contact-container">
-          <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-            <div className="form-row">
-              <input type="text" placeholder="Nombre" className="form-input" required />
-              <input type="text" placeholder="Apellido" className="form-input" required />
-            </div>
-            <input type="email" placeholder="Email" className="form-input" required />
-            <select className="form-input" defaultValue="" required>
-              <option value="" disabled>Motivo de contacto...</option>
-              <option value="consulta">Consulta General</option>
-              <option value="curso">Inscripción a Cursos</option>
-              <option value="evento">Eventos</option>
-              <option value="alianza">Alianza / Patrocinio</option>
-            </select>
-            <textarea placeholder="Mensaje" rows={5} className="form-textarea" required></textarea>
-            <button type="submit" className="cta-button submit-btn">Enviar Mensaje</button>
-          </form>
+      <section id="contacto" className="contact-section-wrapper">
+        <div className="contact-inner">
+          <h2 className="section-title reveal">CONTACTO</h2>
+          <div className="contact-container reveal reveal-scale reveal-delay-1">
+            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+              <div className="form-row">
+                <input
+                  type="text"
+                  placeholder="Nombre"
+                  className="form-input"
+                  value={contactNombre}
+                  onChange={(e) => setContactNombre(e.target.value)}
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Apellido"
+                  className="form-input"
+                  value={contactApellido}
+                  onChange={(e) => setContactApellido(e.target.value)}
+                  required
+                />
+              </div>
+              <input
+                type="email"
+                placeholder="Email"
+                className="form-input"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                required
+              />
+              <select
+                className="form-input"
+                value={contactMotivo}
+                onChange={(e) => setContactMotivo(e.target.value)}
+                required
+              >
+                <option value="" disabled>Motivo de contacto...</option>
+                <option value="consulta">Consulta General</option>
+                <option value="curso">Inscripción a Cursos</option>
+                <option value="evento">Eventos</option>
+                <option value="alianza">Alianza / Patrocinio</option>
+              </select>
+              <textarea
+                placeholder="Mensaje"
+                rows={5}
+                className="form-textarea"
+                value={contactMensaje}
+                onChange={(e) => setContactMensaje(e.target.value)}
+                required
+              ></textarea>
+              <button type="submit" className="cta-button submit-btn">Enviar Mensaje</button>
+            </form>
+          </div>
         </div>
+        <Footer />
       </section>
-
-      <Footer />
     </div>
   );
 };

@@ -21,14 +21,16 @@
   box-sizing: border-box;
 }
 
-html, body {
+html {
+  scroll-behavior: smooth;
+}
+
+body {
   font-family: var(--font-body);
   background-color: var(--color-bg);
   color: var(--color-text);
   overflow-x: hidden;
   line-height: 1.5;
-  scroll-behavior: smooth;
-  height: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {

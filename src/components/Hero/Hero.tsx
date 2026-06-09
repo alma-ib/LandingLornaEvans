@@ -40,7 +40,7 @@ export const Hero: React.FC = () => {
   return (
     <section className="hero">
       <img
-        src="/images/Argentina-Plan-Espacial-Espacio-1140x570-jpg.webp"
+        src="/images/LornaEvans/Argentina-Plan-Espacial-Espacio-1140x570-jpg.webp"
         alt=""
         className="hero-bg-image"
         aria-hidden="true"
