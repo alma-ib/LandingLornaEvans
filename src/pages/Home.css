@@ -291,6 +291,10 @@ html {
   margin-right: auto;
 }
 
+.home-section.alt-bg > .slideshow-wrapper {
+  max-width: 1000px;
+}
+
 /* Contact section wrapper combining contact form and footer */
 .contact-section-wrapper {
   display: flex;
