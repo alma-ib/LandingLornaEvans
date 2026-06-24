@@ -429,24 +429,6 @@ export const Home: React.FC = () => {
     setNosotrosDragOffset(0);
   };
 
-  const handleEnroll = (courseTitle: string) => {
-    setContactMotivo("curso");
-    setContactMensaje(`Hola, me gustaría inscribirme en el curso de ${courseTitle}.`);
-    document.getElementById("contacto")?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleEventEnroll = (eventTitle: string) => {
-    setContactMotivo("evento");
-    setContactMensaje(`Hola, me gustaría obtener más información e inscribirme en el evento: ${eventTitle}.`);
-    document.getElementById("contacto")?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleNewsReadMore = (newsTitle: string) => {
-    setContactMotivo("consulta");
-    setContactMensaje(`Hola, me gustaría recibir más información sobre la noticia: "${newsTitle}".`);
-    document.getElementById("contacto")?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
     if (isAutoplayPaused) return;
     const interval = setInterval(() => {
