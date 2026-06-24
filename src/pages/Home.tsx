@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Footer } from '../components/Footer/Footer';
 import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
 import './Home.css';
+import { Hero } from '../components/Hero/Hero';
 
 interface Course {
   id: number;
@@ -121,10 +122,68 @@ const NEWS: NewsItem[] = [
   },
 ];
 
+interface Pillar {
+  id: number;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+}
+
+const PILLARS: Pillar[] = [
+  {
+    id: 1,
+    title: "Medicina Aeroespacial",
+    description: "Investigamos los efectos del espacio en el cuerpo humano para garantizar la salud en futuras misiones tripuladas.",
+    icon: (
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+    ),
+  },
+  {
+    id: 2,
+    title: "Ingeniería Espacial",
+    description: "Desarrollamos proyectos de cohetes, satélites y tecnologías de punta para el sector aeroespacial latinoamericano.",
+    icon: (
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+      </svg>
+    ),
+  },
+  {
+    id: 3,
+    title: "Biotecnología",
+    description: "Exploramos aplicaciones biotecnológicas para los desafíos de la vida en el espacio, desde fisiología hasta bioingeniería.",
+    icon: (
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="1"/>
+        <path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5z"/>
+        <path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5z"/>
+      </svg>
+    ),
+  },
+  {
+    id: 4,
+    title: "Comunidad Regional",
+    description: "Conectamos especialistas, instituciones y comunidades educativas de toda América Latina para fortalecer el ecosistema espacial.",
+    icon: (
+      <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+    ),
+  },
+];
+
 export const Home: React.FC = () => {
   const [currentCourseIndex, setCurrentCourseIndex] = useState(0);
   const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isNosotrosSlide, setIsNosotrosSlide] = useState(window.innerWidth <= 640);
 
   // Drag states for Courses
   const [isDragging, setIsDragging] = useState(false);
@@ -143,6 +202,12 @@ export const Home: React.FC = () => {
   const [newsDragStartX, setNewsDragStartX] = useState(0);
   const [newsDragOffset, setNewsDragOffset] = useState(0);
 
+  // States and Drag states for Nosotros pillars
+  const [currentNosotrosIndex, setCurrentNosotrosIndex] = useState(0);
+  const [isNosotrosDragging, setIsNosotrosDragging] = useState(false);
+  const [nosotrosDragStartX, setNosotrosDragStartX] = useState(0);
+  const [nosotrosDragOffset, setNosotrosDragOffset] = useState(0);
+
   // Form states
   const [contactNombre, setContactNombre] = useState("");
   const [contactApellido, setContactApellido] = useState("");
@@ -153,9 +218,17 @@ export const Home: React.FC = () => {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
+      setIsNosotrosSlide(window.innerWidth <= 640);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.add('scroll-snap-active');
+    return () => {
+      document.documentElement.classList.remove('scroll-snap-active');
+    };
   }, []);
 
   // Sync indices on resize
@@ -228,7 +301,7 @@ export const Home: React.FC = () => {
   // Courses drag handlers
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
-    if ((e.target as HTMLElement).closest('button')) return;
+    if ((e.target as HTMLElement).closest('button, a')) return;
     setIsDragging(true);
     setDragStartX(e.clientX);
     setDragOffset(0);
@@ -264,7 +337,7 @@ export const Home: React.FC = () => {
   // Events drag handlers
   const handleEventPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
-    if ((e.target as HTMLElement).closest('button')) return;
+    if ((e.target as HTMLElement).closest('button, a')) return;
     setIsEventDragging(true);
     setEventDragStartX(e.clientX);
     setEventDragOffset(0);
@@ -298,7 +371,7 @@ export const Home: React.FC = () => {
   // News drag handlers
   const handleNewsPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
-    if ((e.target as HTMLElement).closest('button')) return;
+    if ((e.target as HTMLElement).closest('button, a')) return;
     setIsNewsDragging(true);
     setNewsDragStartX(e.clientX);
     setNewsDragOffset(0);
@@ -327,6 +400,33 @@ export const Home: React.FC = () => {
     }
 
     setNewsDragOffset(0);
+  };
+
+  // Nosotros drag handlers
+  const handleNosotrosPointerDown = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    if ((e.target as HTMLElement).closest('button, a')) return;
+    setIsNosotrosDragging(true);
+    setNosotrosDragStartX(e.clientX);
+    setNosotrosDragOffset(0);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handleNosotrosPointerMove = (e: React.PointerEvent) => {
+    if (!isNosotrosDragging) return;
+    setNosotrosDragOffset(e.clientX - nosotrosDragStartX);
+  };
+
+  const handleNosotrosPointerUp = (e: React.PointerEvent) => {
+    if (!isNosotrosDragging) return;
+    setIsNosotrosDragging(false);
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    if (nosotrosDragOffset < -60) {
+      setCurrentNosotrosIndex((prev) => (prev + 1) % PILLARS.length);
+    } else if (nosotrosDragOffset > 60) {
+      setCurrentNosotrosIndex((prev) => (prev - 1 + PILLARS.length) % PILLARS.length);
+    }
+    setNosotrosDragOffset(0);
   };
 
   const handleEnroll = (courseTitle: string) => {
@@ -415,13 +515,74 @@ export const Home: React.FC = () => {
       {/* NOSOTROS */}
       <section id="nosotros" className="home-section">
         <h2 className="section-title reveal">NOSOTROS</h2>
-        <div className="section-content-center reveal reveal-scale reveal-delay-1">
-          <p className="section-description">
-            La Asociación Latinoamericana de Medicina Aeroespacial, Ingeniería y Biotecnología (ALMA-IB) impulsa el desarrollo científico, tecnológico y académico del sector aeroespacial en América Latina. Unimos especialistas, instituciones, empresas y comunidades educativas para fortalecer la investigación e innovación espacial en la región.
-          </p>
-          <button className="cta-button">Ver más</button>
-        </div>
+        <p className="nosotros-intro reveal reveal-delay-1">
+          La Asociación Latinoamericana de Medicina Aeroespacial, Ingeniería y Biotecnología (ALMA-IB) impulsa el desarrollo científico, tecnológico y académico del sector aeroespacial en América Latina.
+        </p>
+
+        {isNosotrosSlide ? (
+          /* Slideshow — mobile ≤640px */
+          <div
+            className="slideshow-wrapper nosotros-slideshow-wrapper reveal reveal-scale reveal-delay-1"
+            onPointerDown={handleNosotrosPointerDown}
+            onPointerMove={handleNosotrosPointerMove}
+            onPointerUp={handleNosotrosPointerUp}
+            onPointerCancel={handleNosotrosPointerUp}
+            style={{ touchAction: 'pan-y', cursor: isNosotrosDragging ? 'grabbing' : 'grab' }}
+          >
+            <button className="slideshow-arrow prev" onClick={() => setCurrentNosotrosIndex((p) => (p - 1 + PILLARS.length) % PILLARS.length)} aria-label="Anterior">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button className="slideshow-arrow next" onClick={() => setCurrentNosotrosIndex((p) => (p + 1) % PILLARS.length)} aria-label="Siguiente">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+
+            <div className="slideshow-track-outer">
+              <div
+                className="slideshow-track"
+                style={{
+                  transform: `translateX(calc(-${currentNosotrosIndex * 100}% + ${nosotrosDragOffset}px))`,
+                  transition: isNosotrosDragging ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+                  pointerEvents: isNosotrosDragging ? 'none' : 'auto',
+                }}
+              >
+                {PILLARS.map((pillar) => (
+                  <div className="slideshow-slide" key={pillar.id}>
+                    <div className="nosotros-card nosotros-card--slide">
+                      <div className="nosotros-card-icon">{pillar.icon}</div>
+                      <h3 className="nosotros-card-title">{pillar.title}</h3>
+                      <p className="nosotros-card-description">{pillar.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="slideshow-dots">
+              {PILLARS.map((_, index) => (
+                <button
+                  key={index}
+                  className={`slideshow-dot ${index === currentNosotrosIndex ? 'active' : ''}`}
+                  onClick={() => setCurrentNosotrosIndex(index)}
+                  aria-label={`Ir a diapositiva ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* Grid — desktop >640px */
+          <div className="nosotros-grid">
+            {PILLARS.map((pillar, i) => (
+              <div key={pillar.id} className={`nosotros-card reveal reveal-scale reveal-delay-${i + 1}`}>
+                <div className="nosotros-card-icon">{pillar.icon}</div>
+                <h3 className="nosotros-card-title">{pillar.title}</h3>
+                <p className="nosotros-card-description">{pillar.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
+
+      <Hero />
 
       {/* CURSOS */}
       <section id="cursos" className="home-section alt-bg">
@@ -470,9 +631,9 @@ export const Home: React.FC = () => {
                       </span>
                       <h3 className="course-title">{course.title}</h3>
                       <p className="course-description">{course.description}</p>
-                      <button className="cta-button course-enroll-btn" onClick={() => handleEnroll(course.title)}>
+                      <a className="cta-button course-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
                         Inscribirse
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -539,9 +700,9 @@ export const Home: React.FC = () => {
                       </span>
                       <h3 className="event-title">{event.title}</h3>
                       <p className="event-description">{event.description}</p>
-                      <button className="cta-button event-enroll-btn" onClick={() => handleEventEnroll(event.title)}>
+                      <a className="cta-button event-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
                         Inscribirse
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -608,9 +769,9 @@ export const Home: React.FC = () => {
                       </span>
                       <h3 className="news-title">{news.title}</h3>
                       <p className="news-description">{news.description}</p>
-                      <button className="cta-button news-enroll-btn" onClick={() => handleNewsReadMore(news.title)}>
+                      <a className="cta-button news-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
                         Leer más
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>

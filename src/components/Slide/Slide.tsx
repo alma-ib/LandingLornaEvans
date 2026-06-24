@@ -11,10 +11,11 @@ interface SlideProps {
   sideImageLink?: string;
   sideElement?: React.ReactNode;
   buttonText?: string;
+  buttonLink?: string;
   children?: React.ReactNode;
 }
 
-export const Slide: React.FC<SlideProps> = ({ title, description, imageUrl, sideImage, sideImageLink, sideElement, buttonText, id, children }) => {
+export const Slide: React.FC<SlideProps> = ({ title, description, imageUrl, sideImage, sideImageLink, sideElement, buttonText, buttonLink, id, children }) => {
   const slideRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,9 +26,11 @@ export const Slide: React.FC<SlideProps> = ({ title, description, imageUrl, side
       ([entry]) => {
         if (entry.isIntersecting) {
           el.classList.add('slide-visible');
+        } else {
+          el.classList.remove('slide-visible');
         }
       },
-      { threshold: 0.08 }
+      { threshold: 0.15 }
     );
 
     observer.observe(el);
@@ -44,7 +47,11 @@ export const Slide: React.FC<SlideProps> = ({ title, description, imageUrl, side
                 <span className="slide-number">0{id} /</span> {title}
               </h2>
               <p className="slide-description">{description}</p>
-              {buttonText && <button className="slide-button">{buttonText}</button>}
+              {buttonText && (
+                buttonLink
+                  ? <a href={buttonLink} target="_blank" rel="noopener noreferrer" className="slide-button">{buttonText}</a>
+                  : <button className="slide-button">{buttonText}</button>
+              )}
             </div>
             {(sideElement || sideImage) && (
               <div className="slide-side-image-wrapper">

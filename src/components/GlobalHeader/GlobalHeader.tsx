@@ -62,7 +62,6 @@ export const GlobalHeader: React.FC = () => {
           <li><Link to="/#eventos" onClick={closeMenu}>EVENTOS</Link></li>
           <li><Link to="/#noticias" onClick={closeMenu}>NOTICIAS</Link></li>
           <li><Link to="/#contacto" onClick={closeMenu}>CONTACTO</Link></li>
-          <li><Link to="/lornaevans" onClick={closeMenu} className="highlight-link-mobile">Lorna Evans</Link></li>
         </ul>
 
         <div className="menu-rocket">

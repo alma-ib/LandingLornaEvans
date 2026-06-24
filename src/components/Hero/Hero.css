@@ -6,6 +6,8 @@
   align-items: center;
   background: var(--color-bg, #030014);
   overflow: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .hero-bg-image {
@@ -64,7 +66,9 @@
 .hero-text {
   flex: 1; /* Increased text space slightly */
   text-align: left;
-  animation: fadeInLeft 1s ease-out;
+  opacity: 0;
+  transform: translateX(-80px);
+  transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .hero-image {
@@ -72,7 +76,21 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  animation: fadeInRight 1s ease-out;
+  opacity: 0;
+  transform: translateX(-120px);
+  transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  transition-delay: 0.15s; /* Staggered premium entrance */
+}
+
+/* Scroll-triggered active state styles */
+.hero.animate-in .hero-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.hero.animate-in .hero-image {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 /* New frame for sizing and zoom control */
@@ -131,28 +149,6 @@
   box-shadow: 0 0 20px var(--color-accent-glow);
 }
 
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 /* Scroll Arrow Indicator */
 .scroll-arrow {
   position: absolute;
@@ -198,11 +194,12 @@
     padding-top: 100px;
     height: auto;
     min-height: 100vh;
+    gap: 1.5rem;
   }
 
   .hero-text {
     text-align: center;
-    padding-bottom: 3rem;
+    padding-bottom: 2rem;
     flex: 0 1 auto;
   }
 
@@ -215,8 +212,29 @@
   }
 
   .hero-img-frame {
-    width: 300px; /* Even smaller for mobile */
-    height: 400px;
-    border-radius: 30px;
+    width: 300px;
+    height: 380px;
+    border-radius: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-container {
+    padding-top: 80px;
+    gap: 1rem;
+  }
+
+  .hero-text {
+    padding-bottom: 1rem;
+  }
+
+  .hero-img-frame {
+    width: 220px;
+    height: 290px;
+    border-radius: 20px;
+  }
+
+  .hero-subtitle {
+    margin-bottom: 1.5rem;
   }
 }

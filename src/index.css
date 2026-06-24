@@ -25,6 +25,11 @@ html {
   scroll-behavior: smooth;
 }
 
+html.scroll-snap-active {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-bg);

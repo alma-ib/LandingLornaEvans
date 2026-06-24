@@ -64,6 +64,14 @@
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .overlapping-images-container {
-    max-width: 320px;
+    max-width: 280px;
+    margin: 0 auto 1rem;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .overlapping-images-container {
+    max-width: 220px;
   }
 }

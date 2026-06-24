@@ -1,7 +1,3 @@
-html {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
 
 .home-container {
   width: 100%;
@@ -328,12 +324,12 @@ html {
 }
 
 .section-title {
-  font-size: 2.5rem;
+  font-size: clamp(1.6rem, 5vw, 2.5rem);
   color: var(--color-accent);
   text-align: center;
   margin-bottom: 3rem;
   text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: clamp(2px, 1vw, 4px);
 }
 
 .section-content-center {
@@ -343,7 +339,7 @@ html {
 }
 
 .section-description {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   color: var(--color-text);
   line-height: 1.8;
   margin-bottom: 2rem;
@@ -777,6 +773,22 @@ html {
 }
 
 @media (max-width: 768px) {
+  .home-section {
+    padding: 90px 16px 50px;
+  }
+
+  .section-title {
+    margin-bottom: 2rem;
+  }
+
+  .contact-section-wrapper {
+    padding-top: 70px;
+  }
+
+  .contact-inner {
+    padding: 1.5rem 16px;
+  }
+
   .form-row {
     flex-direction: column;
     gap: 1.5rem;
@@ -789,6 +801,150 @@ html {
   .submit-btn {
     align-self: stretch;
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-section {
+    padding: 80px 12px 40px;
+  }
+
+  .section-content-center {
+    max-width: 100%;
+  }
+
+  .sponsors-bar {
+    padding: 2rem 0;
+  }
+
+  .sponsors-title {
+    font-size: 1.5rem;
+  }
+
+  .sponsors-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .slideshow-wrapper {
+    padding: 0 12px 70px;
+  }
+}
+
+/* ── Nosotros Section ── */
+#nosotros {
+  padding-top: 80px;
+  padding-bottom: 30px;
+}
+
+#nosotros .section-title {
+  margin-bottom: 1.2rem;
+}
+
+.nosotros-intro {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: var(--color-text);
+  line-height: 1.75;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 1.5rem;
+}
+
+.nosotros-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9rem;
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.nosotros-card {
+  background: rgba(10, 10, 42, 0.55);
+  border: 1px solid rgba(0, 243, 255, 0.12);
+  border-radius: 18px;
+  padding: 1.3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.nosotros-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 243, 255, 0.45);
+  box-shadow: 0 12px 36px rgba(0, 243, 255, 0.1), 0 0 0 1px rgba(0, 243, 255, 0.07);
+}
+
+.nosotros-card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(0, 243, 255, 0.07);
+  border: 1px solid rgba(0, 243, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+  transition: background 0.35s ease, box-shadow 0.35s ease;
+}
+
+.nosotros-card:hover .nosotros-card-icon {
+  background: rgba(0, 243, 255, 0.14);
+  box-shadow: 0 0 16px rgba(0, 243, 255, 0.22);
+}
+
+.nosotros-card-title {
+  font-size: 1.05rem;
+  color: #fff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.nosotros-card-description {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nosotros-cta {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+/* Slideshow variant (rendered by React on ≤640px) */
+.nosotros-slideshow-wrapper {
+  max-width: 600px;
+}
+
+.nosotros-card--slide {
+  padding: 2rem 1.8rem;
+  gap: 1rem;
+}
+
+.nosotros-card--slide .nosotros-card-description {
+  -webkit-line-clamp: 4;
+}
+
+@media (max-width: 640px) {
+  #nosotros {
+    padding-top: 70px;
+    padding-bottom: 20px;
+  }
+
+  .nosotros-intro {
+    margin-bottom: 1.2rem;
+  }
+
+  .nosotros-cta {
+    margin-top: 1.2rem;
   }
 }
 
