@@ -156,9 +156,9 @@ export const Home: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isNosotrosSlide, setIsNosotrosSlide] = useState(window.innerWidth <= 640);
 
-  const { items: courses, loading: coursesLoading } = useSupabaseTable('courses');
-  const { items: events, loading: eventsLoading } = useSupabaseTable('events');
-  const { items: news, loading: newsLoading } = useSupabaseTable('news');
+  const { items: courses, loading: coursesLoading, error: coursesError } = useSupabaseTable('courses');
+  const { items: events, loading: eventsLoading, error: eventsError } = useSupabaseTable('events');
+  const { items: news, loading: newsLoading, error: newsError } = useSupabaseTable('news');
 
   const cardsPerView = isMobile ? 1 : 2;
   // Math.max(..., 1) keeps useInfiniteCarousel's modulo math safe while data
@@ -482,7 +482,7 @@ export const Home: React.FC = () => {
 
         {coursesLoading || courses.length === 0 ? (
         <div className="content-loading reveal reveal-scale reveal-delay-1">
-          {coursesLoading ? 'Cargando cursos...' : 'Próximamente nuevos cursos.'}
+          {coursesLoading ? 'Cargando cursos...' : coursesError ? `Error al cargar cursos: ${coursesError}` : 'Próximamente nuevos cursos.'}
         </div>
         ) : (
         <div
@@ -563,7 +563,7 @@ export const Home: React.FC = () => {
 
         {eventsLoading || events.length === 0 ? (
         <div className="content-loading reveal reveal-scale reveal-delay-1">
-          {eventsLoading ? 'Cargando eventos...' : 'Próximamente nuevos eventos.'}
+          {eventsLoading ? 'Cargando eventos...' : eventsError ? `Error al cargar eventos: ${eventsError}` : 'Próximamente nuevos eventos.'}
         </div>
         ) : (
         <div
@@ -642,7 +642,7 @@ export const Home: React.FC = () => {
 
         {newsLoading || news.length === 0 ? (
         <div className="content-loading reveal reveal-scale reveal-delay-1">
-          {newsLoading ? 'Cargando noticias...' : 'Próximamente nuevas noticias.'}
+          {newsLoading ? 'Cargando noticias...' : newsError ? `Error al cargar noticias: ${newsError}` : 'Próximamente nuevas noticias.'}
         </div>
         ) : (
         <div
