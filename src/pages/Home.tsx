@@ -4,123 +4,7 @@ import { Footer } from '../components/Footer/Footer';
 import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
 import './Home.css';
 import { Hero } from '../components/Hero/Hero';
-
-interface Course {
-  id: number;
-  title: string;
-  description: string;
-  dateTime: string;
-  imageUrl: string;
-}
-
-const COURSES: Course[] = [
-  {
-    id: 1,
-    title: "Astronomía avanzada",
-    description: "Profundiza tus conocimientos sobre el universo con expertos de la región. Exploración de agujeros negros, cosmología y evolución estelar.",
-    dateTime: "15/07/2026",
-    imageUrl: "/images/ALMA-IB/curso-astronomia.png",
-  },
-  {
-    id: 2,
-    title: "Mi primer telescopio",
-    description: "Aprende a usar, alinear y mantener tu equipo óptico. Ideal para principiantes que quieren dar sus primeros pasos en la observación del cielo nocturno.",
-    dateTime: "22/07/2026",
-    imageUrl: "/images/ALMA-IB/curso-telescopio.png",
-  },
-  {
-    id: 3,
-    title: "Medicina Aeroespacial",
-    description: "Estudia los efectos de los vuelos espaciales y la microgravedad en el cuerpo humano, y los desafíos para los futuros viajes interplanetarios de larga duración.",
-    dateTime: "5/08/2026",
-    imageUrl: "/images/ALMA-IB/curso-medicina.png",
-  },
-  {
-    id: 4,
-    title: "Cohetería Experimental",
-    description: "Aprende los principios físicos, diseño y aerodinámica de cohetes propulsados por combustible sólido. Talleres prácticos de simulación y construcción.",
-    dateTime: "12/10/2026",
-    imageUrl: "/images/ALMA-IB/curso-coheteria.png",
-  },
-];
-
-interface EventItem {
-  id: number;
-  title: string;
-  description: string;
-  dateTime: string;
-  imageUrl: string;
-}
-
-const EVENTS: EventItem[] = [
-  {
-    id: 1,
-    title: "Jornada de Cohetería",
-    description: "Participa en talleres prácticos y lanzamientos reales de cohetes propulsados por combustible sólido y agua.",
-    dateTime: "12/09/2026",
-    imageUrl: "/images/ALMA-IB/evento-coheteria.png",
-  },
-  {
-    id: 2,
-    title: "Congreso de Medicina Aeroespacial",
-    description: "Reunión anual con los mayores exponentes del continente para discutir los avances en medicina y fisiología del espacio.",
-    dateTime: "15/10/2026",
-    imageUrl: "/images/ALMA-IB/evento-congreso.png",
-  },
-  {
-    id: 3,
-    title: "Observación de Lluvia de Estrellas",
-    description: "Una noche única de observación astronómica con telescopios avanzados guiada por astrónomos profesionales.",
-    dateTime: "10/11/2026",
-    imageUrl: "/images/ALMA-IB/evento-observacion.png",
-  },
-  {
-    id: 4,
-    title: "Taller de Satélites CanSat",
-    description: "Diseña, integra y programa tu propio satélite a escala en lata y prepárate para los lanzamientos de prueba.",
-    dateTime: "05/12/2026",
-    imageUrl: "/images/ALMA-IB/evento-satelite.png",
-  },
-];
-
-interface NewsItem {
-  id: number;
-  title: string;
-  description: string;
-  dateTime: string;
-  imageUrl: string;
-}
-
-const NEWS: NewsItem[] = [
-  {
-    id: 1,
-    title: "Nuevo convenio con Universidades",
-    description: "Expandimos nuestras alianzas estratégicas para fomentar la investigación aeroespacial en estudiantes de grado de toda la región.",
-    dateTime: "28/05/2026",
-    imageUrl: "/images/ALMA-IB/noticia-convenio.png",
-  },
-  {
-    id: 2,
-    title: "Lanzamiento exitoso del CanSat 2026",
-    description: "El último proyecto de satélite estudiantil supera todas las expectativas y logra recopilar valiosos datos atmosféricos.",
-    dateTime: "02/06/2026",
-    imageUrl: "/images/ALMA-IB/noticia-cansat.png",
-  },
-  {
-    id: 3,
-    title: "Beca de Investigación Aeroespacial",
-    description: "Se abren las postulaciones para la beca de investigación anual destinada a proyectos de medicina y biotecnología del espacio.",
-    dateTime: "05/06/2026",
-    imageUrl: "/images/ALMA-IB/noticia-beca.png",
-  },
-  {
-    id: 4,
-    title: "Webinar de Lorna Evans sobre la NASA",
-    description: "No te pierdas este webinar interactivo con Lorna Evans compartiendo sus experiencias de trabajo y colaboración con la NASA.",
-    dateTime: "08/06/2026",
-    imageUrl: "/images/ALMA-IB/noticia-charla.png",
-  },
-];
+import { useSupabaseTable } from '../hooks/useSupabaseTable';
 
 interface Pillar {
   id: number;
@@ -272,10 +156,18 @@ export const Home: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isNosotrosSlide, setIsNosotrosSlide] = useState(window.innerWidth <= 640);
 
+  const { items: courses, loading: coursesLoading } = useSupabaseTable('courses');
+  const { items: events, loading: eventsLoading } = useSupabaseTable('events');
+  const { items: news, loading: newsLoading } = useSupabaseTable('news');
+
   const cardsPerView = isMobile ? 1 : 2;
-  const courseCarousel = useInfiniteCarousel(COURSES.length, cardsPerView);
-  const eventCarousel = useInfiniteCarousel(EVENTS.length, cardsPerView);
-  const newsCarousel = useInfiniteCarousel(NEWS.length, cardsPerView);
+  // Math.max(..., 1) keeps useInfiniteCarousel's modulo math safe while data
+  // is still loading (empty array); the loading skeleton is rendered instead
+  // of the carousel markup until items actually arrive, so index 0 is never
+  // read from an empty items array.
+  const courseCarousel = useInfiniteCarousel(Math.max(courses.length, 1), cardsPerView);
+  const eventCarousel = useInfiniteCarousel(Math.max(events.length, 1), cardsPerView);
+  const newsCarousel = useInfiniteCarousel(Math.max(news.length, 1), cardsPerView);
 
   // Drag states for Courses
   const [isDragging, setIsDragging] = useState(false);
@@ -588,6 +480,11 @@ export const Home: React.FC = () => {
       <section id="cursos" className="home-section alt-bg">
         <h2 className="section-title reveal">CURSOS</h2>
 
+        {coursesLoading || courses.length === 0 ? (
+        <div className="content-loading reveal reveal-scale reveal-delay-1">
+          {coursesLoading ? 'Cargando cursos...' : 'Próximamente nuevos cursos.'}
+        </div>
+        ) : (
         <div
           className="slideshow-wrapper reveal reveal-scale reveal-delay-1"
           onMouseEnter={() => setIsAutoplayPaused(true)}
@@ -619,12 +516,12 @@ export const Home: React.FC = () => {
               }}
             >
               {courseCarousel.renderIndices.map((courseIdx, i) => {
-                const course = COURSES[courseIdx];
+                const course = courses[courseIdx];
                 return (
                   <div className="slideshow-slide" key={`${course.id}-${i}`}>
                     <div className="course-card">
                       <div className="course-image-wrapper">
-                        <img src={course.imageUrl} alt={course.title} className="course-image" draggable="false" />
+                        <img src={course.imageUrl ?? ''} alt={course.title} className="course-image" draggable="false" />
                         <div className="course-image-overlay"></div>
                       </div>
                       <div className="course-content">
@@ -657,12 +554,18 @@ export const Home: React.FC = () => {
             ))}
           </div>
         </div>
+        )}
       </section>
 
       {/* EVENTOS */}
       <section id="eventos" className="home-section">
         <h2 className="section-title reveal">EVENTOS</h2>
 
+        {eventsLoading || events.length === 0 ? (
+        <div className="content-loading reveal reveal-scale reveal-delay-1">
+          {eventsLoading ? 'Cargando eventos...' : 'Próximamente nuevos eventos.'}
+        </div>
+        ) : (
         <div
           className="slideshow-wrapper reveal reveal-scale reveal-delay-1"
           onPointerDown={handleEventPointerDown}
@@ -692,12 +595,12 @@ export const Home: React.FC = () => {
               }}
             >
               {eventCarousel.renderIndices.map((eventIdx, i) => {
-                const event = EVENTS[eventIdx];
+                const event = events[eventIdx];
                 return (
                   <div className="slideshow-slide" key={`${event.id}-${i}`}>
                     <div className="event-card">
                       <div className="event-image-wrapper">
-                        <img src={event.imageUrl} alt={event.title} className="event-image" draggable="false" />
+                        <img src={event.imageUrl ?? ''} alt={event.title} className="event-image" draggable="false" />
                         <div className="event-image-overlay"></div>
                       </div>
                       <div className="event-content">
@@ -730,12 +633,18 @@ export const Home: React.FC = () => {
             ))}
           </div>
         </div>
+        )}
       </section>
 
       {/* NOTICIAS */}
       <section id="noticias" className="home-section alt-bg">
         <h2 className="section-title reveal">NOTICIAS</h2>
 
+        {newsLoading || news.length === 0 ? (
+        <div className="content-loading reveal reveal-scale reveal-delay-1">
+          {newsLoading ? 'Cargando noticias...' : 'Próximamente nuevas noticias.'}
+        </div>
+        ) : (
         <div
           className="slideshow-wrapper reveal reveal-scale reveal-delay-1"
           onPointerDown={handleNewsPointerDown}
@@ -765,21 +674,21 @@ export const Home: React.FC = () => {
               }}
             >
               {newsCarousel.renderIndices.map((newsIdx, i) => {
-                const news = NEWS[newsIdx];
+                const newsItem = news[newsIdx];
                 return (
-                  <div className="slideshow-slide" key={`${news.id}-${i}`}>
+                  <div className="slideshow-slide" key={`${newsItem.id}-${i}`}>
                     <div className="news-card">
                       <div className="news-image-wrapper">
-                        <img src={news.imageUrl} alt={news.title} className="news-image" draggable="false" />
+                        <img src={newsItem.imageUrl ?? ''} alt={newsItem.title} className="news-image" draggable="false" />
                         <div className="news-image-overlay"></div>
                       </div>
                       <div className="news-content">
                         <span className="news-date-badge">
                           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                          {news.dateTime}
+                          {newsItem.dateTime}
                         </span>
-                        <h3 className="news-title">{news.title}</h3>
-                        <p className="news-description">{news.description}</p>
+                        <h3 className="news-title">{newsItem.title}</h3>
+                        <p className="news-description">{newsItem.description}</p>
                         <a className="cta-button news-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
                           Leer más
                         </a>
@@ -803,6 +712,7 @@ export const Home: React.FC = () => {
             ))}
           </div>
         </div>
+        )}
       </section>
 
       {/* Sponsors Bar */}
