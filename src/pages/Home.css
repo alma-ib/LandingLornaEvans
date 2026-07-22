@@ -365,7 +365,12 @@
 }
 
 .slideshow-track-outer {
-  overflow: hidden;
+  /* Clip only the horizontal axis (needed to hide off-screen slides while
+     sliding). Using clip-path instead of `overflow: hidden` avoids the
+     hidden/visible axis coupling, so the hover glow on the cards can bleed
+     out vertically instead of being cropped by this wrapper. */
+  overflow: visible;
+  clip-path: inset(-100vmax 0 -100vmax 0);
   width: 100%;
   border-radius: 24px;
 }
@@ -404,7 +409,6 @@
 .course-card:hover,
 .event-card:hover,
 .news-card:hover {
-  transform: translateY(-5px);
   border-color: var(--color-accent);
   box-shadow: 0 15px 45px rgba(0, 243, 255, 0.2);
 }

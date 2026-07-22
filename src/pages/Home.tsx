@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import { Footer } from '../components/Footer/Footer';
 import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
@@ -179,25 +179,115 @@ const PILLARS: Pillar[] = [
   },
 ];
 
+// Sliding-window carousel that loops seamlessly: renders a few cloned
+// slides before/after the real list so "next" past the last item keeps
+// sliding forward into the clone of the first item (and vice versa for
+// "prev"), then silently snaps the position back into the real range
+// once the clone looks identical to the real slide — no visible rewind.
+function useInfiniteCarousel(itemsLength: number, cardsPerView: number) {
+  // Number of distinct circular positions (and dots): one per item. In a
+  // wrapping carousel every item can be the "lead" card of a window, no
+  // matter how many cards are visible at once — using itemsLength here
+  // (instead of itemsLength - cardsPerView + 1) keeps the snap-back shift
+  // landing exactly on a real dot instead of an in-between window, which
+  // is what caused the dots to drift out of sync after looping.
+  const total = itemsLength;
+
+  const [pos, setPos] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
+
+  // Keep pos within range whenever the viewport (cardsPerView) or list changes.
+  // Adjusted during render (React's recommended pattern) instead of in an
+  // effect, so it takes effect before paint with no extra render cycle.
+  const [prevTotal, setPrevTotal] = useState(total);
+  if (prevTotal !== total) {
+    setPrevTotal(total);
+    setPos((p) => ((p % total) + total) % total);
+    setIsAnimating(false);
+  }
+
+  // Re-enable the transition on the frame right after an instant snap.
+  useEffect(() => {
+    if (!transitionEnabled) {
+      const id = requestAnimationFrame(() => setTransitionEnabled(true));
+      return () => cancelAnimationFrame(id);
+    }
+  }, [transitionEnabled, pos]);
+
+  // Cloned render order: [..last `cardsPerView` items, ...all items, first `cardsPerView` items..]
+  const renderIndices = useMemo(() => {
+    const arr: number[] = [];
+    for (let i = -cardsPerView; i < itemsLength + cardsPerView; i++) {
+      arr.push(((i % itemsLength) + itemsLength) % itemsLength);
+    }
+    return arr;
+  }, [itemsLength, cardsPerView]);
+
+  const next = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setPos((p) => p + 1);
+  };
+
+  const prev = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setPos((p) => p - 1);
+  };
+
+  const goToReal = (index: number) => {
+    if (isAnimating) return;
+    setPos(index);
+  };
+
+  const handleTransitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget || e.propertyName !== 'transform') return;
+    setIsAnimating(false);
+    if (pos > total - 1) {
+      setTransitionEnabled(false);
+      setPos(pos - itemsLength);
+    } else if (pos < 0) {
+      setTransitionEnabled(false);
+      setPos(pos + itemsLength);
+    }
+  };
+
+  return {
+    extIndex: pos + cardsPerView,
+    renderIndices,
+    percentPerSlide: 100 / cardsPerView,
+    transitionEnabled,
+    total,
+    activeDot: ((pos % total) + total) % total,
+    next,
+    prev,
+    goToReal,
+    handleTransitionEnd,
+  };
+}
+
 export const Home: React.FC = () => {
-  const [currentCourseIndex, setCurrentCourseIndex] = useState(0);
   const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isNosotrosSlide, setIsNosotrosSlide] = useState(window.innerWidth <= 640);
+
+  const cardsPerView = isMobile ? 1 : 2;
+  const courseCarousel = useInfiniteCarousel(COURSES.length, cardsPerView);
+  const eventCarousel = useInfiniteCarousel(EVENTS.length, cardsPerView);
+  const newsCarousel = useInfiniteCarousel(NEWS.length, cardsPerView);
 
   // Drag states for Courses
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
   const [dragOffset, setDragOffset] = useState(0);
 
-  // States and Drag states for Events
-  const [currentEventIndex, setCurrentEventIndex] = useState(0);
+  // Drag states for Events
   const [isEventDragging, setIsEventDragging] = useState(false);
   const [eventDragStartX, setEventDragStartX] = useState(0);
   const [eventDragOffset, setEventDragOffset] = useState(0);
 
-  // States and Drag states for News
-  const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
+  // Drag states for News
   const [isNewsDragging, setIsNewsDragging] = useState(false);
   const [newsDragStartX, setNewsDragStartX] = useState(0);
   const [newsDragOffset, setNewsDragOffset] = useState(0);
@@ -231,73 +321,6 @@ export const Home: React.FC = () => {
     };
   }, []);
 
-  // Sync indices on resize
-  useEffect(() => {
-    const maxIndex = isMobile ? COURSES.length - 1 : COURSES.length - 2;
-    if (currentCourseIndex > maxIndex) {
-      setCurrentCourseIndex(maxIndex);
-    }
-  }, [isMobile, currentCourseIndex]);
-
-  useEffect(() => {
-    const maxIndex = isMobile ? EVENTS.length - 1 : EVENTS.length - 2;
-    if (currentEventIndex > maxIndex) {
-      setCurrentEventIndex(maxIndex);
-    }
-  }, [isMobile, currentEventIndex]);
-
-  useEffect(() => {
-    const maxIndex = isMobile ? NEWS.length - 1 : NEWS.length - 2;
-    if (currentNewsIndex > maxIndex) {
-      setCurrentNewsIndex(maxIndex);
-    }
-  }, [isMobile, currentNewsIndex]);
-
-  // Navigation helpers for Courses
-  const nextSlide = () => {
-    const totalSlides = isMobile ? COURSES.length : COURSES.length - 1;
-    setCurrentCourseIndex((prev) => (prev + 1) % totalSlides);
-  };
-
-  const prevSlide = () => {
-    const totalSlides = isMobile ? COURSES.length : COURSES.length - 1;
-    setCurrentCourseIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-  };
-
-  const setSlide = (index: number) => {
-    setCurrentCourseIndex(index);
-  };
-
-  // Navigation helpers for Events
-  const nextEventSlide = () => {
-    const totalSlides = isMobile ? EVENTS.length : EVENTS.length - 1;
-    setCurrentEventIndex((prev) => (prev + 1) % totalSlides);
-  };
-
-  const prevEventSlide = () => {
-    const totalSlides = isMobile ? EVENTS.length : EVENTS.length - 1;
-    setCurrentEventIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-  };
-
-  const setEventSlide = (index: number) => {
-    setCurrentEventIndex(index);
-  };
-
-  // Navigation helpers for News
-  const nextNewsSlide = () => {
-    const totalSlides = isMobile ? NEWS.length : NEWS.length - 1;
-    setCurrentNewsIndex((prev) => (prev + 1) % totalSlides);
-  };
-
-  const prevNewsSlide = () => {
-    const totalSlides = isMobile ? NEWS.length : NEWS.length - 1;
-    setCurrentNewsIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
-  };
-
-  const setNewsSlide = (index: number) => {
-    setCurrentNewsIndex(index);
-  };
-
   // Courses drag handlers
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
@@ -322,12 +345,10 @@ export const Home: React.FC = () => {
     e.currentTarget.releasePointerCapture(e.pointerId);
 
     const threshold = 60;
-    const totalSlides = isMobile ? COURSES.length : COURSES.length - 1;
-
     if (dragOffset < -threshold) {
-      setCurrentCourseIndex((prev) => (prev + 1) % totalSlides);
+      courseCarousel.next();
     } else if (dragOffset > threshold) {
-      setCurrentCourseIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+      courseCarousel.prev();
     }
 
     setDragOffset(0);
@@ -357,12 +378,10 @@ export const Home: React.FC = () => {
     e.currentTarget.releasePointerCapture(e.pointerId);
 
     const threshold = 60;
-    const totalSlides = isMobile ? EVENTS.length : EVENTS.length - 1;
-
     if (eventDragOffset < -threshold) {
-      setCurrentEventIndex((prev) => (prev + 1) % totalSlides);
+      eventCarousel.next();
     } else if (eventDragOffset > threshold) {
-      setCurrentEventIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+      eventCarousel.prev();
     }
 
     setEventDragOffset(0);
@@ -391,12 +410,10 @@ export const Home: React.FC = () => {
     e.currentTarget.releasePointerCapture(e.pointerId);
 
     const threshold = 60;
-    const totalSlides = isMobile ? NEWS.length : NEWS.length - 1;
-
     if (newsDragOffset < -threshold) {
-      setCurrentNewsIndex((prev) => (prev + 1) % totalSlides);
+      newsCarousel.next();
     } else if (newsDragOffset > threshold) {
-      setCurrentNewsIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+      newsCarousel.prev();
     }
 
     setNewsDragOffset(0);
@@ -432,9 +449,10 @@ export const Home: React.FC = () => {
   useEffect(() => {
     if (isAutoplayPaused) return;
     const interval = setInterval(() => {
-      nextSlide();
+      courseCarousel.next();
     }, 5000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAutoplayPaused]);
   useEffect(() => {
     const observerOptions = {
@@ -581,11 +599,11 @@ export const Home: React.FC = () => {
           style={{ touchAction: 'pan-y', cursor: isDragging ? 'grabbing' : 'grab' }}
         >
           {/* Controls */}
-          <button className="slideshow-arrow prev" onClick={prevSlide} aria-label="Anterior">
+          <button className="slideshow-arrow prev" onClick={courseCarousel.prev} aria-label="Anterior">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
-          <button className="slideshow-arrow next" onClick={nextSlide} aria-label="Siguiente">
+          <button className="slideshow-arrow next" onClick={courseCarousel.next} aria-label="Siguiente">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
 
@@ -593,43 +611,47 @@ export const Home: React.FC = () => {
           <div className="slideshow-track-outer">
             <div
               className="slideshow-track"
+              onTransitionEnd={courseCarousel.handleTransitionEnd}
               style={{
-                transform: `translateX(calc(-${currentCourseIndex * (isMobile ? 100 : 50)}% + ${dragOffset}px))`,
-                transition: isDragging ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+                transform: `translateX(calc(-${courseCarousel.extIndex * courseCarousel.percentPerSlide}% + ${dragOffset}px))`,
+                transition: (isDragging || !courseCarousel.transitionEnabled) ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
                 pointerEvents: isDragging ? 'none' : 'auto'
               }}
             >
-              {COURSES.map((course) => (
-                <div className="slideshow-slide" key={course.id}>
-                  <div className="course-card">
-                    <div className="course-image-wrapper">
-                      <img src={course.imageUrl} alt={course.title} className="course-image" draggable="false" />
-                      <div className="course-image-overlay"></div>
-                    </div>
-                    <div className="course-content">
-                      <span className="course-date-badge">
-                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        {course.dateTime}
-                      </span>
-                      <h3 className="course-title">{course.title}</h3>
-                      <p className="course-description">{course.description}</p>
-                      <a className="cta-button course-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
-                        Inscribirse
-                      </a>
+              {courseCarousel.renderIndices.map((courseIdx, i) => {
+                const course = COURSES[courseIdx];
+                return (
+                  <div className="slideshow-slide" key={`${course.id}-${i}`}>
+                    <div className="course-card">
+                      <div className="course-image-wrapper">
+                        <img src={course.imageUrl} alt={course.title} className="course-image" draggable="false" />
+                        <div className="course-image-overlay"></div>
+                      </div>
+                      <div className="course-content">
+                        <span className="course-date-badge">
+                          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                          {course.dateTime}
+                        </span>
+                        <h3 className="course-title">{course.title}</h3>
+                        <p className="course-description">{course.description}</p>
+                        <a className="cta-button course-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
+                          Inscribirse
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           {/* Dots Indicators */}
           <div className="slideshow-dots">
-            {Array.from({ length: isMobile ? COURSES.length : COURSES.length - 1 }).map((_, index) => (
+            {Array.from({ length: courseCarousel.total }).map((_, index) => (
               <button
                 key={index}
-                className={`slideshow-dot ${index === currentCourseIndex ? 'active' : ''}`}
-                onClick={() => setSlide(index)}
+                className={`slideshow-dot ${index === courseCarousel.activeDot ? 'active' : ''}`}
+                onClick={() => courseCarousel.goToReal(index)}
                 aria-label={`Ir a diapositiva ${index + 1}`}
               />
             ))}
@@ -650,11 +672,11 @@ export const Home: React.FC = () => {
           style={{ touchAction: 'pan-y', cursor: isEventDragging ? 'grabbing' : 'grab' }}
         >
           {/* Controls */}
-          <button className="slideshow-arrow prev" onClick={prevEventSlide} aria-label="Anterior">
+          <button className="slideshow-arrow prev" onClick={eventCarousel.prev} aria-label="Anterior">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
-          <button className="slideshow-arrow next" onClick={nextEventSlide} aria-label="Siguiente">
+          <button className="slideshow-arrow next" onClick={eventCarousel.next} aria-label="Siguiente">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
 
@@ -662,43 +684,47 @@ export const Home: React.FC = () => {
           <div className="slideshow-track-outer">
             <div
               className="slideshow-track"
+              onTransitionEnd={eventCarousel.handleTransitionEnd}
               style={{
-                transform: `translateX(calc(-${currentEventIndex * (isMobile ? 100 : 50)}% + ${eventDragOffset}px))`,
-                transition: isEventDragging ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+                transform: `translateX(calc(-${eventCarousel.extIndex * eventCarousel.percentPerSlide}% + ${eventDragOffset}px))`,
+                transition: (isEventDragging || !eventCarousel.transitionEnabled) ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
                 pointerEvents: isEventDragging ? 'none' : 'auto'
               }}
             >
-              {EVENTS.map((event) => (
-                <div className="slideshow-slide" key={event.id}>
-                  <div className="event-card">
-                    <div className="event-image-wrapper">
-                      <img src={event.imageUrl} alt={event.title} className="event-image" draggable="false" />
-                      <div className="event-image-overlay"></div>
-                    </div>
-                    <div className="event-content">
-                      <span className="event-date-badge">
-                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        {event.dateTime}
-                      </span>
-                      <h3 className="event-title">{event.title}</h3>
-                      <p className="event-description">{event.description}</p>
-                      <a className="cta-button event-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
-                        Inscribirse
-                      </a>
+              {eventCarousel.renderIndices.map((eventIdx, i) => {
+                const event = EVENTS[eventIdx];
+                return (
+                  <div className="slideshow-slide" key={`${event.id}-${i}`}>
+                    <div className="event-card">
+                      <div className="event-image-wrapper">
+                        <img src={event.imageUrl} alt={event.title} className="event-image" draggable="false" />
+                        <div className="event-image-overlay"></div>
+                      </div>
+                      <div className="event-content">
+                        <span className="event-date-badge">
+                          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                          {event.dateTime}
+                        </span>
+                        <h3 className="event-title">{event.title}</h3>
+                        <p className="event-description">{event.description}</p>
+                        <a className="cta-button event-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
+                          Inscribirse
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           {/* Dots Indicators */}
           <div className="slideshow-dots">
-            {Array.from({ length: isMobile ? EVENTS.length : EVENTS.length - 1 }).map((_, index) => (
+            {Array.from({ length: eventCarousel.total }).map((_, index) => (
               <button
                 key={index}
-                className={`slideshow-dot ${index === currentEventIndex ? 'active' : ''}`}
-                onClick={() => setEventSlide(index)}
+                className={`slideshow-dot ${index === eventCarousel.activeDot ? 'active' : ''}`}
+                onClick={() => eventCarousel.goToReal(index)}
                 aria-label={`Ir a diapositiva ${index + 1}`}
               />
             ))}
@@ -719,11 +745,11 @@ export const Home: React.FC = () => {
           style={{ touchAction: 'pan-y', cursor: isNewsDragging ? 'grabbing' : 'grab' }}
         >
           {/* Controls */}
-          <button className="slideshow-arrow prev" onClick={prevNewsSlide} aria-label="Anterior">
+          <button className="slideshow-arrow prev" onClick={newsCarousel.prev} aria-label="Anterior">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
           </button>
 
-          <button className="slideshow-arrow next" onClick={nextNewsSlide} aria-label="Siguiente">
+          <button className="slideshow-arrow next" onClick={newsCarousel.next} aria-label="Siguiente">
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
           </button>
 
@@ -731,43 +757,47 @@ export const Home: React.FC = () => {
           <div className="slideshow-track-outer">
             <div
               className="slideshow-track"
+              onTransitionEnd={newsCarousel.handleTransitionEnd}
               style={{
-                transform: `translateX(calc(-${currentNewsIndex * (isMobile ? 100 : 50)}% + ${newsDragOffset}px))`,
-                transition: isNewsDragging ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
+                transform: `translateX(calc(-${newsCarousel.extIndex * newsCarousel.percentPerSlide}% + ${newsDragOffset}px))`,
+                transition: (isNewsDragging || !newsCarousel.transitionEnabled) ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)',
                 pointerEvents: isNewsDragging ? 'none' : 'auto'
               }}
             >
-              {NEWS.map((news) => (
-                <div className="slideshow-slide" key={news.id}>
-                  <div className="news-card">
-                    <div className="news-image-wrapper">
-                      <img src={news.imageUrl} alt={news.title} className="news-image" draggable="false" />
-                      <div className="news-image-overlay"></div>
-                    </div>
-                    <div className="news-content">
-                      <span className="news-date-badge">
-                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                        {news.dateTime}
-                      </span>
-                      <h3 className="news-title">{news.title}</h3>
-                      <p className="news-description">{news.description}</p>
-                      <a className="cta-button news-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
-                        Leer más
-                      </a>
+              {newsCarousel.renderIndices.map((newsIdx, i) => {
+                const news = NEWS[newsIdx];
+                return (
+                  <div className="slideshow-slide" key={`${news.id}-${i}`}>
+                    <div className="news-card">
+                      <div className="news-image-wrapper">
+                        <img src={news.imageUrl} alt={news.title} className="news-image" draggable="false" />
+                        <div className="news-image-overlay"></div>
+                      </div>
+                      <div className="news-content">
+                        <span className="news-date-badge">
+                          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" className="clock-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                          {news.dateTime}
+                        </span>
+                        <h3 className="news-title">{news.title}</h3>
+                        <p className="news-description">{news.description}</p>
+                        <a className="cta-button news-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
+                          Leer más
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           {/* Dots Indicators */}
           <div className="slideshow-dots">
-            {Array.from({ length: isMobile ? NEWS.length : NEWS.length - 1 }).map((_, index) => (
+            {Array.from({ length: newsCarousel.total }).map((_, index) => (
               <button
                 key={index}
-                className={`slideshow-dot ${index === currentNewsIndex ? 'active' : ''}`}
-                onClick={() => setNewsSlide(index)}
+                className={`slideshow-dot ${index === newsCarousel.activeDot ? 'active' : ''}`}
+                onClick={() => newsCarousel.goToReal(index)}
                 aria-label={`Ir a diapositiva ${index + 1}`}
               />
             ))}
