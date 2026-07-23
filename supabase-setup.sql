@@ -78,3 +78,27 @@ insert into public.news (title, description, event_date, image_url) values
   ('Lanzamiento exitoso del CanSat 2026', 'El último proyecto de satélite estudiantil supera todas las expectativas y logra recopilar valiosos datos atmosféricos.', '2026-06-02', '/images/ALMA-IB/noticia-cansat.png'),
   ('Beca de Investigación Aeroespacial', 'Se abren las postulaciones para la beca de investigación anual destinada a proyectos de medicina y biotecnología del espacio.', '2026-06-05', '/images/ALMA-IB/noticia-beca.png'),
   ('Webinar de Lorna Evans sobre la NASA', 'No te pierdas este webinar interactivo con Lorna Evans compartiendo sus experiencias de trabajo y colaboración con la NASA.', '2026-06-08', '/images/ALMA-IB/noticia-charla.png');
+
+-- Inscriptions: submitted from the public "Inscribirse" form on a course or
+-- event detail page. Public (anon) can insert; only the authenticated admin
+-- can read/manage them.
+
+create table public.inscriptions (
+  id uuid primary key default gen_random_uuid(),
+  item_table text not null check (item_table in ('courses', 'events')),
+  item_id uuid not null,
+  item_title text not null,
+  first_name text not null,
+  last_name text not null,
+  email text not null,
+  message text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.inscriptions enable row level security;
+
+create policy "public insert inscriptions" on public.inscriptions
+  for insert with check (true);
+
+create policy "auth manage inscriptions" on public.inscriptions for all
+  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');

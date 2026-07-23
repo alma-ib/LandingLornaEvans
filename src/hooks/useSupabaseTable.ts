@@ -1,31 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { deleteContentImage } from '../lib/contentImages';
+import { rowToItem, type ContentRow } from '../lib/contentMapping';
 import type { ContentItem, TableName } from '../types/content';
-
-interface ContentRow {
-  id: string;
-  title: string;
-  description: string;
-  event_date: string;
-  image_url: string | null;
-}
-
-function formatDateEs(isoDate: string): string {
-  const [year, month, day] = isoDate.split('-');
-  return `${day}/${month}/${year}`;
-}
-
-function rowToItem(row: ContentRow): ContentItem {
-  return {
-    id: row.id,
-    title: row.title,
-    description: row.description,
-    dateTime: formatDateEs(row.event_date),
-    eventDate: row.event_date,
-    imageUrl: row.image_url,
-  };
-}
 
 export interface ContentItemInput {
   title: string;
