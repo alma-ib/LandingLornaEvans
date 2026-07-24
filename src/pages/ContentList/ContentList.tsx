@@ -8,7 +8,11 @@ import type { TableName } from '../../types/content';
 import '../Home.css';
 import './ContentList.css';
 
-const INSTAGRAM_URL = 'https://www.instagram.com/almaib.inc/';
+const ROUTE_PREFIX: Record<TableName, string> = {
+  courses: 'cursos',
+  events: 'eventos',
+  news: 'noticias',
+};
 
 interface ContentListProps {
   table: TableName;
@@ -50,9 +54,9 @@ export const ContentList: React.FC<ContentListProps> = ({ table, pageTitle, empt
                   </span>
                   <h3 className={`${cardPrefix}-title`}>{item.title}</h3>
                   <p className={`${cardPrefix}-description`}>{item.description}</p>
-                  <a className={`cta-button ${cardPrefix}-enroll-btn`} href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+                  <Link className={`cta-button ${cardPrefix}-enroll-btn`} to={`/${ROUTE_PREFIX[table]}/${item.id}`}>
                     {ctaLabel}
-                  </a>
+                  </Link>
                 </div>
               </div>
             ))}

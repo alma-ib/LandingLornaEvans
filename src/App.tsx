@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { AdminLogin } from './pages/admin/AdminLogin';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { ContentDetail } from './pages/ContentDetail/ContentDetail';
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
             <Route path="/eventos" element={<Eventos />} />
             <Route path="/noticias" element={<Noticias />} />
             <Route path="/lornaevans" element={<LornaEvans />} />
+            <Route path="/cursos/:id" element={<ContentDetail table="courses" />} />
+            <Route path="/eventos/:id" element={<ContentDetail table="events" />} />
+            <Route path="/noticias/:id" element={<ContentDetail table="news" />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin"

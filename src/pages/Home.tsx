@@ -539,9 +539,9 @@ export const Home: React.FC = () => {
                         </span>
                         <h3 className="course-title">{course.title}</h3>
                         <p className="course-description">{course.description}</p>
-                        <a className="cta-button course-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
+                        <Link className="cta-button course-enroll-btn" to={`/cursos/${course.id}`}>
                           Inscribirse
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -622,9 +622,9 @@ export const Home: React.FC = () => {
                         </span>
                         <h3 className="event-title">{event.title}</h3>
                         <p className="event-description">{event.description}</p>
-                        <a className="cta-button event-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
+                        <Link className="cta-button event-enroll-btn" to={`/eventos/${event.id}`}>
                           Inscribirse
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -705,9 +705,9 @@ export const Home: React.FC = () => {
                         </span>
                         <h3 className="news-title">{newsItem.title}</h3>
                         <p className="news-description">{newsItem.description}</p>
-                        <a className="cta-button news-enroll-btn" href="https://www.instagram.com/almaib.inc/" target="_blank" rel="noopener noreferrer">
+                        <Link className="cta-button news-enroll-btn" to={`/noticias/${newsItem.id}`}>
                           Leer más
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
