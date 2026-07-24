@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
+import { AlmaFooter } from '../components/AlmaFooter/AlmaFooter';
 import { Footer } from '../components/Footer/Footer';
 import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
 import './Home.css';
@@ -157,9 +158,15 @@ export const Home: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isNosotrosSlide, setIsNosotrosSlide] = useState(window.innerWidth <= 640);
 
-  const { items: courses, loading: coursesLoading, error: coursesError } = useSupabaseTable('courses');
-  const { items: events, loading: eventsLoading, error: eventsError } = useSupabaseTable('events');
-  const { items: news, loading: newsLoading, error: newsError } = useSupabaseTable('news');
+  const { items: allCourses, loading: coursesLoading, error: coursesError } = useSupabaseTable('courses');
+  const { items: allEvents, loading: eventsLoading, error: eventsError } = useSupabaseTable('events');
+  const { items: allNews, loading: newsLoading, error: newsError } = useSupabaseTable('news');
+
+  // Home only previews the 4 most recent of each; the full lists live on
+  // their own pages (/cursos, /eventos, /noticias).
+  const courses = allCourses.slice(-4);
+  const events = allEvents.slice(-4);
+  const news = allNews.slice(-4);
 
   const cardsPerView = isMobile ? 1 : 2;
   // Math.max(..., 1) keeps useInfiniteCarousel's modulo math safe while data
@@ -556,6 +563,10 @@ export const Home: React.FC = () => {
           </div>
         </div>
         )}
+
+        <div className="section-view-all">
+          <Link to="/cursos" className="cta-button">Ver todos los cursos</Link>
+        </div>
       </section>
 
       {/* EVENTOS */}
@@ -635,6 +646,10 @@ export const Home: React.FC = () => {
           </div>
         </div>
         )}
+
+        <div className="section-view-all">
+          <Link to="/eventos" className="cta-button">Ver todos los eventos</Link>
+        </div>
       </section>
 
       {/* NOTICIAS */}
@@ -714,6 +729,10 @@ export const Home: React.FC = () => {
           </div>
         </div>
         )}
+
+        <div className="section-view-all">
+          <Link to="/noticias" className="cta-button">Ver todas las noticias</Link>
+        </div>
       </section>
 
       {/* Sponsors Bar */}
@@ -799,6 +818,7 @@ export const Home: React.FC = () => {
             </form>
           </div>
         </div>
+        <AlmaFooter />
         <Footer />
       </section>
     </div>

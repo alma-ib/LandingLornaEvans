@@ -82,13 +82,15 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   background: rgba(3, 0, 20, 0.98);
   backdrop-filter: blur(15px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding: calc(var(--nav-height, 80px) + 20px) 20px 40px;
+  overflow-y: auto;
   transform: translateY(-100%);
   transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
   z-index: 999;
@@ -99,7 +101,7 @@
 }
 
 .menu-header {
-  margin-bottom: 3rem;
+  margin-bottom: clamp(1rem, 4vh, 3rem);
   text-align: center;
   opacity: 0;
   transform: translateY(-20px);
@@ -113,7 +115,7 @@
 
 .menu-brand {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
+  font-size: clamp(1.6rem, 5vh, 2.5rem);
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 8px;
@@ -135,7 +137,7 @@
 }
 
 .menu-links li {
-  margin: 1.5rem 0;
+  margin: clamp(0.5rem, 2vh, 1.5rem) 0;
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.4s ease;
@@ -156,7 +158,7 @@
   border: none;
   color: #fff;
   font-family: var(--font-heading);
-  font-size: 2.2rem;
+  font-size: clamp(1.3rem, 4.5vh, 2.2rem);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 4px;
@@ -171,9 +173,11 @@
 }
 
 .menu-social {
-  margin-top: 4rem;
+  margin-top: clamp(1.5rem, 4vh, 4rem);
   display: flex;
-  gap: 2rem;
+  gap: clamp(0.75rem, 2vw, 2rem);
+  flex-wrap: wrap;
+  justify-content: center;
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.5s ease 0.8s;
@@ -187,8 +191,8 @@
 .social-icon-btn {
   background: none;
   border: none;
-  width: 50px;
-  height: 50px;
+  width: clamp(38px, 6vh, 50px);
+  height: clamp(38px, 6vh, 50px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -197,8 +201,8 @@
 }
 
 .social-icon-btn img {
-  width: 40px; 
-  height: 40px;
+  width: 100%;
+  height: 100%;
   filter: brightness(0) invert(1); /* Pure white */
   opacity: 0.8;
   transition: all 0.3s ease;
