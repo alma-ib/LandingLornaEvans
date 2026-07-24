@@ -85,3 +85,11 @@ button {
   0% { opacity: 0.3; }
   100% { opacity: 0.7; }
 }
+
+/* Full-page variant: fixed to the viewport instead of the nearest 100vh
+   section, so it stays visible behind content that scrolls taller than one
+   viewport (list/detail pages) instead of only covering the first screen. */
+.stars-bg--fixed {
+  position: fixed;
+  height: 100vh;
+}

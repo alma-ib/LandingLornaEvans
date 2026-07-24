@@ -486,6 +486,7 @@ export const Home: React.FC = () => {
 
       {/* CURSOS */}
       <section id="cursos" className="home-section alt-bg">
+        <div className="stars-bg"></div>
         <h2 className="section-title reveal">CURSOS</h2>
 
         {coursesLoading || courses.length === 0 ? (
@@ -571,6 +572,7 @@ export const Home: React.FC = () => {
 
       {/* EVENTOS */}
       <section id="eventos" className="home-section">
+        <div className="stars-bg"></div>
         <h2 className="section-title reveal">EVENTOS</h2>
 
         {eventsLoading || events.length === 0 ? (
@@ -654,6 +656,7 @@ export const Home: React.FC = () => {
 
       {/* NOTICIAS */}
       <section id="noticias" className="home-section alt-bg">
+        <div className="stars-bg"></div>
         <h2 className="section-title reveal">NOTICIAS</h2>
 
         {newsLoading || news.length === 0 ? (

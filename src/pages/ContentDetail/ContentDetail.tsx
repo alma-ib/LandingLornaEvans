@@ -29,6 +29,8 @@ export const ContentDetail: React.FC<ContentDetailProps> = ({ table }) => {
 
   return (
     <div className="content-detail-page">
+      <div className="stars-bg stars-bg--fixed"></div>
+      <div className="content-detail-stack">
       <GlobalHeader />
 
       <main className="content-detail-main">
@@ -66,6 +68,7 @@ export const ContentDetail: React.FC<ContentDetailProps> = ({ table }) => {
       </main>
 
       <Footer />
+      </div>
     </div>
   );
 };
