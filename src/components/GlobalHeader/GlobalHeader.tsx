@@ -64,6 +64,27 @@ export const GlobalHeader: React.FC = () => {
           <li><Link to="/#contacto" onClick={closeMenu}>CONTACTO</Link></li>
         </ul>
 
+        <div className="menu-social">
+          <button className="social-icon-btn" aria-label="Instagram">
+            <img src="/images/Iconos50x50/icons8-instagram-50.svg" alt="Instagram" />
+          </button>
+          <button className="social-icon-btn" aria-label="LinkedIn">
+            <img src="/images/Iconos50x50/icons8-linkedin-50.svg" alt="LinkedIn" />
+          </button>
+          <button className="social-icon-btn" aria-label="Twitter">
+            <img src="/images/Iconos50x50/icons8-twitterx-50.svg" alt="Twitter" />
+          </button>
+          <button className="social-icon-btn" aria-label="Facebook">
+            <img src="/images/Iconos50x50/icons8-facebook-50.svg" alt="Facebook" />
+          </button>
+          <button className="social-icon-btn" aria-label="TikTok">
+            <img src="/images/Iconos50x50/icons8-tiktok-50.svg" alt="TikTok" />
+          </button>
+          <button className="social-icon-btn" aria-label="YouTube">
+            <img src="/images/Iconos50x50/icons8-youtube-play-50.svg" alt="YouTube" />
+          </button>
+        </div>
+
         <div className="menu-rocket">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path d="M12,2.5c0,0-5.5,2.5-5.5,10.5h11C17.5,5,12,2.5,12,2.5z M12,18c-1.1,0-2-0.9-2-2h4C14,17.1,13.1,18,12,18z M7,14v2h2v-2H7z M15,14v2h2v-2H15z" />

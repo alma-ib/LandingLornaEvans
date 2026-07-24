@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 
+import { AlmaFooter } from '../components/AlmaFooter/AlmaFooter';
 import { Footer } from '../components/Footer/Footer';
 import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
 import './Home.css';
@@ -798,6 +799,7 @@ export const Home: React.FC = () => {
             </form>
           </div>
         </div>
+        <AlmaFooter />
         <Footer />
       </section>
     </div>
