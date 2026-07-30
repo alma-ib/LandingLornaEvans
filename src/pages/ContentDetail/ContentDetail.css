@@ -1,7 +1,7 @@
 .content-detail-page {
   width: 100%;
   min-height: 100vh;
-  background: var(--color-bg);
+  background: rgba(3, 0, 20, 0.88);
 }
 
 .content-detail-main {

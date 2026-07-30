@@ -1,8 +1,8 @@
 .footer {
   width: 100%;
   align-self: stretch;
-  background-color: var(--color-bg-alt);
-  padding: 4rem 2rem 2rem;
+  background-color: rgba(10, 10, 42, 0.85);
+  padding: 1.75rem 2rem 1.25rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05); /* Slight separation line */
   scroll-snap-align: start;
   box-sizing: border-box;
@@ -26,7 +26,7 @@
 }
 
 .footer-logo {
-  height: 40px;
+  height: 28px;
   width: auto;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .footer-branding h2 {
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   color: #fff;
   margin: 0;
   transition: all 0.3s ease;
@@ -57,7 +57,7 @@
 
 .footer-branding p {
   color: var(--color-text-muted);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
 }
 
@@ -102,17 +102,17 @@
 
 .footer-bottom {
   max-width: 1200px;
-  margin: 3rem auto 0;
-  padding-top: 1.5rem;
+  margin: 1.25rem auto 0;
+  padding-top: 0.9rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
   text-align: center;
   color: var(--color-text-muted);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 @media (max-width: 768px) {
   .footer {
-    padding: 2.5rem 1.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 1rem;
   }
 
   .footer-content {
@@ -138,21 +138,21 @@
   }
 
   .footer-bottom {
-    margin-top: 2rem;
+    margin-top: 1.1rem;
   }
 }
 
 @media (max-width: 480px) {
   .footer {
-    padding: 2rem 1rem 1.5rem;
+    padding: 1.25rem 1rem 1rem;
   }
 
   .footer-branding h2 {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .footer-bottom {
-    margin-top: 1.5rem;
-    font-size: 0.75rem;
+    margin-top: 0.9rem;
+    font-size: 0.65rem;
   }
 }
