@@ -1,11 +1,11 @@
 .forms-admin-table-wrapper {
-  overflow-x: auto;
   border: 1px solid rgba(0, 243, 255, 0.15);
   border-radius: 16px;
 }
 
 .forms-admin-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: 0.9rem;
 }
@@ -19,7 +19,6 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   border-bottom: 1px solid rgba(0, 243, 255, 0.15);
-  white-space: nowrap;
 }
 
 .forms-admin-row {
@@ -30,6 +29,8 @@
 .forms-admin-row td {
   padding: 0.9rem 1rem;
   border-bottom: 1px solid rgba(0, 243, 255, 0.08);
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -60,5 +61,6 @@
 
 .forms-admin-detail dd {
   color: var(--color-text);
-  word-break: break-word;
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
