@@ -438,6 +438,11 @@
   -webkit-user-select: none;
 }
 
+.course-card.is-finished,
+.event-card.is-finished {
+  filter: grayscale(1);
+}
+
 .course-card:hover,
 .event-card:hover,
 .news-card:hover {

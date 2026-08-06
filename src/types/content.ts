@@ -7,6 +7,7 @@ export interface ContentItem {
   dateTime: string;
   eventDate: string;
   imageUrl: string | null;
+  isFinished: boolean;
 }
 
 export const TABLE_LABELS: Record<TableName, string> = {

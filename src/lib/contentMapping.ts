@@ -6,6 +6,7 @@ export interface ContentRow {
   description: string;
   event_date: string;
   image_url: string | null;
+  is_finished: boolean;
 }
 
 export function formatDateEs(isoDate: string): string {
@@ -21,5 +22,6 @@ export function rowToItem(row: ContentRow): ContentItem {
     dateTime: formatDateEs(row.event_date),
     eventDate: row.event_date,
     imageUrl: row.image_url,
+    isFinished: row.is_finished,
   };
 }

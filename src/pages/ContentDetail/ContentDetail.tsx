@@ -47,7 +47,11 @@ export const ContentDetail: React.FC<ContentDetailProps> = ({ table }) => {
 
             {item.imageUrl && (
               <div className="content-detail-image-wrapper">
-                <img src={item.imageUrl} alt={item.title} className="content-detail-image" />
+                <img
+                  src={item.imageUrl}
+                  alt={item.title}
+                  className={`content-detail-image ${item.isFinished ? 'is-finished' : ''}`}
+                />
               </div>
             )}
 
@@ -60,7 +64,13 @@ export const ContentDetail: React.FC<ContentDetailProps> = ({ table }) => {
 
             {table !== 'news' && (
               <div className="content-detail-form-wrapper">
-                <InscriptionForm table={table} itemId={item.id} itemTitle={item.title} />
+                {item.isFinished ? (
+                  <p className="content-detail-finished-notice">
+                    Este {table === 'courses' ? 'curso' : 'evento'} ya finalizó. Ya no se aceptan nuevas inscripciones.
+                  </p>
+                ) : (
+                  <InscriptionForm table={table} itemId={item.id} itemTitle={item.title} />
+                )}
               </div>
             )}
           </article>

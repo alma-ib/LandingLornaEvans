@@ -27,6 +27,7 @@ export const AdminCrudSection: React.FC<AdminCrudSectionProps> = ({ table, label
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
 
   const isFormOpen = isCreating || editingItem !== null;
 
@@ -78,6 +79,7 @@ export const AdminCrudSection: React.FC<AdminCrudSectionProps> = ({ table, label
         description: form.description,
         eventDate: form.eventDate,
         imageUrl,
+        isFinished: editingItem?.isFinished ?? false,
       };
 
       if (editingItem) {
@@ -100,6 +102,26 @@ export const AdminCrudSection: React.FC<AdminCrudSectionProps> = ({ table, label
       await remove(item.id, item.imageUrl);
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleToggleFinished = async (item: ContentItem) => {
+    const confirmMessage = item.isFinished
+      ? `¿Reactivar "${item.title}"? Va a volver a mostrarse en color y a aceptar inscripciones nuevamente.`
+      : `¿Marcar "${item.title}" como finalizado? Va a mostrarse en blanco y negro en la página principal y ya no se van a poder recibir nuevas inscripciones. Podés reactivarlo después si hace falta.`;
+    if (!window.confirm(confirmMessage)) return;
+
+    setTogglingId(item.id);
+    try {
+      await update(item.id, {
+        title: item.title,
+        description: item.description,
+        eventDate: item.eventDate,
+        imageUrl: item.imageUrl,
+        isFinished: !item.isFinished,
+      });
+    } finally {
+      setTogglingId(null);
     }
   };
 
@@ -186,10 +208,22 @@ export const AdminCrudSection: React.FC<AdminCrudSectionProps> = ({ table, label
             <li key={item.id} className="admin-crud-list-item">
               {item.imageUrl && <img src={item.imageUrl} alt="" className="admin-crud-thumb" />}
               <div className="admin-crud-item-info">
-                <span className="admin-crud-item-title">{item.title}</span>
+                <span className="admin-crud-item-title">
+                  {item.title}
+                  {item.isFinished && <span className="admin-crud-badge">Finalizado</span>}
+                </span>
                 <span className="admin-crud-item-date">{item.dateTime}</span>
               </div>
               <div className="admin-crud-item-actions">
+                {table !== 'news' && (
+                  <button
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => handleToggleFinished(item)}
+                    disabled={isFormOpen || togglingId === item.id}
+                  >
+                    {togglingId === item.id ? 'Guardando...' : item.isFinished ? 'Reactivar' : 'Marcar finalizado'}
+                  </button>
+                )}
                 <button className="admin-btn" onClick={() => openEditForm(item)} disabled={isFormOpen}>
                   Editar
                 </button>

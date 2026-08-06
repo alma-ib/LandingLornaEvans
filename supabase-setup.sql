@@ -171,3 +171,13 @@ create policy "public insert contact_submissions" on public.contact_submissions
 
 create policy "auth manage contact_submissions" on public.contact_submissions for all
   using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+
+-- Lets the admin mark a course/event as finished: shown in grayscale on the
+-- public site and its inscription form is disabled. Added to all three
+-- content tables (courses/events/news) even though the UI only surfaces it
+-- for courses/events, so the shared ContentItem hooks stay schema-uniform
+-- across the three tables.
+
+alter table public.courses add column if not exists is_finished boolean not null default false;
+alter table public.events  add column if not exists is_finished boolean not null default false;
+alter table public.news    add column if not exists is_finished boolean not null default false;

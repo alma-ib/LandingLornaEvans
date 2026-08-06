@@ -47,6 +47,10 @@
   display: block;
 }
 
+.content-detail-image.is-finished {
+  filter: grayscale(1);
+}
+
 .content-detail-date {
   display: inline-flex;
   align-items: center;
@@ -73,4 +77,14 @@
 
 .content-detail-form-wrapper {
   margin-top: 2rem;
+}
+
+.content-detail-finished-notice {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  background: rgba(10, 10, 42, 0.4);
 }

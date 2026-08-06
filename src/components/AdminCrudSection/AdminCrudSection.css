@@ -83,6 +83,20 @@
   white-space: nowrap;
 }
 
+.admin-crud-badge {
+  display: inline-block;
+  margin-left: 0.6rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 50px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  color: var(--color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
 .admin-crud-item-date {
   font-size: 0.85rem;
   color: var(--color-text-muted);

@@ -44,7 +44,7 @@ export const ContentList: React.FC<ContentListProps> = ({ table, pageTitle, empt
         ) : (
           <div className="content-list-grid">
             {items.map((item) => (
-              <div className={`${cardPrefix}-card`} key={item.id}>
+              <div className={`${cardPrefix}-card ${item.isFinished ? 'is-finished' : ''}`} key={item.id}>
                 <div className={`${cardPrefix}-image-wrapper`}>
                   <img src={item.imageUrl ?? ''} alt={item.title} className={`${cardPrefix}-image`} />
                   <div className={`${cardPrefix}-image-overlay`}></div>

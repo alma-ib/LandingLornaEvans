@@ -20,7 +20,7 @@ export function useSupabaseItem(table: TableName, id: string | undefined) {
     async function load() {
       const { data, error: fetchError } = await supabase
         .from(table)
-        .select('id, title, description, event_date, image_url')
+        .select('id, title, description, event_date, image_url, is_finished')
         .eq('id', id)
         .maybeSingle();
 

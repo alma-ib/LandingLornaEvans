@@ -9,6 +9,7 @@ export interface ContentItemInput {
   description: string;
   eventDate: string;
   imageUrl: string | null;
+  isFinished: boolean;
 }
 
 export function useSupabaseTable(table: TableName) {
@@ -19,7 +20,7 @@ export function useSupabaseTable(table: TableName) {
   const refetch = useCallback(async () => {
     const { data, error: fetchError } = await supabase
       .from(table)
-      .select('id, title, description, event_date, image_url')
+      .select('id, title, description, event_date, image_url, is_finished')
       .order('event_date', { ascending: true });
 
     if (fetchError) {
@@ -45,6 +46,7 @@ export function useSupabaseTable(table: TableName) {
       description: input.description,
       event_date: input.eventDate,
       image_url: input.imageUrl,
+      is_finished: input.isFinished,
     });
     if (insertError) throw insertError;
     await refetch();
@@ -58,6 +60,7 @@ export function useSupabaseTable(table: TableName) {
         description: input.description,
         event_date: input.eventDate,
         image_url: input.imageUrl,
+        is_finished: input.isFinished,
       })
       .eq('id', id);
     if (updateError) throw updateError;

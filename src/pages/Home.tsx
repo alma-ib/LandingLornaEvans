@@ -585,7 +585,7 @@ export const Home: React.FC = () => {
                 const course = courses[courseIdx];
                 return (
                   <div className="slideshow-slide" key={`${course.id}-${i}`}>
-                    <div className="course-card">
+                    <div className={`course-card ${course.isFinished ? 'is-finished' : ''}`}>
                       <div className="course-image-wrapper">
                         <img src={course.imageUrl ?? ''} alt={course.title} className="course-image" draggable="false" />
                         <div className="course-image-overlay"></div>
@@ -669,7 +669,7 @@ export const Home: React.FC = () => {
                 const event = events[eventIdx];
                 return (
                   <div className="slideshow-slide" key={`${event.id}-${i}`}>
-                    <div className="event-card">
+                    <div className={`event-card ${event.isFinished ? 'is-finished' : ''}`}>
                       <div className="event-image-wrapper">
                         <img src={event.imageUrl ?? ''} alt={event.title} className="event-image" draggable="false" />
                         <div className="event-image-overlay"></div>
