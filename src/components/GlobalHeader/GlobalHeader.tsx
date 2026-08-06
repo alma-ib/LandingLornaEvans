@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useSocialLinks, getVisibleSocialLinks } from '../../hooks/useSocialLinks';
 import './GlobalHeader.css';
 
 export const GlobalHeader: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { links } = useSocialLinks();
+  const visibleSocialLinks = getVisibleSocialLinks(links);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,26 +67,22 @@ export const GlobalHeader: React.FC = () => {
           <li><Link to="/#contacto" onClick={closeMenu}>CONTACTO</Link></li>
         </ul>
 
-        <div className="menu-social">
-          <button className="social-icon-btn" aria-label="Instagram">
-            <img src="/images/Iconos50x50/icons8-instagram-50.svg" alt="Instagram" />
-          </button>
-          <button className="social-icon-btn" aria-label="LinkedIn">
-            <img src="/images/Iconos50x50/icons8-linkedin-50.svg" alt="LinkedIn" />
-          </button>
-          <button className="social-icon-btn" aria-label="Twitter">
-            <img src="/images/Iconos50x50/icons8-twitterx-50.svg" alt="Twitter" />
-          </button>
-          <button className="social-icon-btn" aria-label="Facebook">
-            <img src="/images/Iconos50x50/icons8-facebook-50.svg" alt="Facebook" />
-          </button>
-          <button className="social-icon-btn" aria-label="TikTok">
-            <img src="/images/Iconos50x50/icons8-tiktok-50.svg" alt="TikTok" />
-          </button>
-          <button className="social-icon-btn" aria-label="YouTube">
-            <img src="/images/Iconos50x50/icons8-youtube-play-50.svg" alt="YouTube" />
-          </button>
-        </div>
+        {visibleSocialLinks.length > 0 && (
+          <div className="menu-social">
+            {visibleSocialLinks.map((social) => (
+              <a
+                key={social.key}
+                className="social-icon-btn"
+                aria-label={social.label}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={social.icon} alt={social.label} />
+              </a>
+            ))}
+          </div>
+        )}
 
         <div className="menu-rocket">
           <svg viewBox="0 0 24 24" fill="currentColor">

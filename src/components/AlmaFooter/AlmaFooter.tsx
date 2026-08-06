@@ -1,8 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSocialLinks, getVisibleSocialLinks } from '../../hooks/useSocialLinks';
 import './AlmaFooter.css';
 
 export const AlmaFooter: React.FC = () => {
+  const { links } = useSocialLinks();
+  const visibleSocialLinks = getVisibleSocialLinks(links);
+
   return (
     <div className="alma-footer">
       <div className="alma-footer-content">
@@ -28,15 +32,22 @@ export const AlmaFooter: React.FC = () => {
         <div className="alma-footer-contact">
           <p className="alma-footer-heading">Contacto</p>
           <a href="mailto:contacto@alma-ib.org" className="alma-footer-email">contacto@alma-ib.org</a>
-          <a
-            href="https://www.instagram.com/almaib.inc/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="alma-footer-social-btn"
-            aria-label="Instagram"
-          >
-            <img src="/images/Iconos50x50/icons8-instagram-50.svg" alt="Instagram" />
-          </a>
+          {visibleSocialLinks.length > 0 && (
+            <div className="alma-footer-social">
+              {visibleSocialLinks.map((social) => (
+                <a
+                  key={social.key}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="alma-footer-social-btn"
+                  aria-label={social.label}
+                >
+                  <img src={social.icon} alt={social.label} />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

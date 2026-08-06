@@ -90,6 +90,11 @@
   color: var(--color-accent);
 }
 
+.alma-footer-social {
+  display: flex;
+  gap: 0.75rem;
+}
+
 .alma-footer-social-btn {
   display: flex;
   justify-content: center;

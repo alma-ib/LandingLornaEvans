@@ -1,5 +1,4 @@
 import { supabase } from './supabaseClient';
-import type { TableName } from '../types/content';
 
 const BUCKET = 'content-images';
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
@@ -15,8 +14,8 @@ export function validateImageFile(file: File): string | null {
   return null;
 }
 
-export async function uploadContentImage(table: TableName, file: File): Promise<string> {
-  const path = `${table}/${crypto.randomUUID()}-${file.name}`;
+export async function uploadContentImage(folder: string, file: File): Promise<string> {
+  const path = `${folder}/${crypto.randomUUID()}-${file.name}`;
   const { error } = await supabase.storage.from(BUCKET).upload(path, file);
   if (error) throw error;
   return supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;

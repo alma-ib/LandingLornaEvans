@@ -1,15 +1,31 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { AdminCrudSection } from '../../components/AdminCrudSection/AdminCrudSection';
+import { SocialLinksAdmin } from '../../components/SocialLinksAdmin/SocialLinksAdmin';
+import { SponsorsAdmin } from '../../components/SponsorsAdmin/SponsorsAdmin';
 import { TABLE_LABELS, type TableName } from '../../types/content';
 import './admin-shared.css';
 import './AdminDashboard.css';
 
-const TABS: TableName[] = ['courses', 'events', 'news'];
+type DashboardTab = TableName | 'social' | 'sponsors';
+
+const TABS: { key: DashboardTab; label: string }[] = [
+  { key: 'courses', label: TABLE_LABELS.courses },
+  { key: 'events', label: TABLE_LABELS.events },
+  { key: 'news', label: TABLE_LABELS.news },
+  { key: 'social', label: 'Redes Sociales' },
+  { key: 'sponsors', label: 'Sponsors' },
+];
+
+const CONTENT_TABS: TableName[] = ['courses', 'events', 'news'];
+
+function isContentTab(tab: DashboardTab): tab is TableName {
+  return (CONTENT_TABS as DashboardTab[]).includes(tab);
+}
 
 export const AdminDashboard: React.FC = () => {
   const { signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState<TableName>('courses');
+  const [activeTab, setActiveTab] = useState<DashboardTab>('courses');
 
   return (
     <div className="admin-page admin-dashboard">
@@ -21,17 +37,23 @@ export const AdminDashboard: React.FC = () => {
       <nav className="admin-dashboard-tabs">
         {TABS.map((tab) => (
           <button
-            key={tab}
-            className={`admin-dashboard-tab ${activeTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab)}
+            key={tab.key}
+            className={`admin-dashboard-tab ${activeTab === tab.key ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.key)}
           >
-            {TABLE_LABELS[tab]}
+            {tab.label}
           </button>
         ))}
       </nav>
 
       <main className="admin-dashboard-content">
-        <AdminCrudSection table={activeTab} label={TABLE_LABELS[activeTab]} />
+        {activeTab === 'social' ? (
+          <SocialLinksAdmin />
+        ) : activeTab === 'sponsors' ? (
+          <SponsorsAdmin />
+        ) : isContentTab(activeTab) ? (
+          <AdminCrudSection table={activeTab} label={TABLE_LABELS[activeTab]} />
+        ) : null}
       </main>
     </div>
   );

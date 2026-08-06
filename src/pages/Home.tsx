@@ -7,6 +7,7 @@ import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
 import './Home.css';
 import { Hero } from '../components/Hero/Hero';
 import { useSupabaseTable } from '../hooks/useSupabaseTable';
+import { useSponsors } from '../hooks/useSponsors';
 
 interface Pillar {
   id: number;
@@ -158,6 +159,7 @@ export const Home: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isNosotrosSlide, setIsNosotrosSlide] = useState(window.innerWidth <= 640);
 
+  const { items: sponsors } = useSponsors();
   const { items: allCourses, loading: coursesLoading, error: coursesError } = useSupabaseTable('courses');
   const { items: allEvents, loading: eventsLoading, error: eventsError } = useSupabaseTable('events');
   const { items: allNews, loading: newsLoading, error: newsError } = useSupabaseTable('news');
@@ -749,18 +751,17 @@ export const Home: React.FC = () => {
             <a href="#contacto" className="cta-button sponsors-cta">Quiero ser sponsor</a>
           </div>
           <div className="sponsors-track reveal reveal-right reveal-delay-1">
-            <div className="sponsor-item">
-              <img src="/images/ALMA-IB/acema2.png" alt="ACEMA" className="sponsor-logo" />
-            </div>
-            <div className="sponsor-item">
-              <img src="/images/ALMA-IB/AeroBar_20251215_234114_0000.webp" alt="AeroBar" className="sponsor-logo" />
-            </div>
-            <div className="sponsor-item">
-              <img src="/images/ALMA-IB/AtronomiaGualeguayLogoNuevo.webp" alt="Astronomía Gualeguay" className="sponsor-logo" />
-            </div>
-            <div className="sponsor-item">
-              <img src="/images/ALMA-IB/zonodev transparente.png" alt="Zonodev" className="sponsor-logo" />
-            </div>
+            {sponsors.map((sponsor) => (
+              <div className="sponsor-item" key={sponsor.id}>
+                {sponsor.url ? (
+                  <a href={sponsor.url} target="_blank" rel="noopener noreferrer">
+                    <img src={sponsor.imageUrl ?? ''} alt={sponsor.name} className="sponsor-logo" />
+                  </a>
+                ) : (
+                  <img src={sponsor.imageUrl ?? ''} alt={sponsor.name} className="sponsor-logo" />
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
