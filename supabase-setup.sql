@@ -150,3 +150,24 @@ insert into public.sponsors (name, image_url, url) values
   ('AeroBar', '/images/ALMA-IB/AeroBar_20251215_234114_0000.webp', null),
   ('Astronomía Gualeguay', '/images/ALMA-IB/AtronomiaGualeguayLogoNuevo.webp', null),
   ('Zonodev', '/images/ALMA-IB/zonodev transparente.png', 'https://zonodev.ar/es/');
+
+-- Contact form submissions, from the "CONTACTO" section on Home. Same
+-- public-insert/admin-read RLS pattern as inscriptions.
+
+create table public.contact_submissions (
+  id uuid primary key default gen_random_uuid(),
+  first_name text not null,
+  last_name text not null,
+  email text not null,
+  reason text not null check (reason in ('consulta', 'curso', 'evento', 'alianza')),
+  message text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.contact_submissions enable row level security;
+
+create policy "public insert contact_submissions" on public.contact_submissions
+  for insert with check (true);
+
+create policy "auth manage contact_submissions" on public.contact_submissions for all
+  using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');

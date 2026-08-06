@@ -8,6 +8,7 @@ import './Home.css';
 import { Hero } from '../components/Hero/Hero';
 import { useSupabaseTable } from '../hooks/useSupabaseTable';
 import { useSponsors } from '../hooks/useSponsors';
+import { supabase } from '../lib/supabaseClient';
 
 interface Pillar {
   id: number;
@@ -221,6 +222,37 @@ export const Home: React.FC = () => {
   const [contactEmail, setContactEmail] = useState("");
   const [contactMotivo, setContactMotivo] = useState("");
   const [contactMensaje, setContactMensaje] = useState("");
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [contactError, setContactError] = useState<string | null>(null);
+  const [contactSubmitted, setContactSubmitted] = useState(false);
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setContactSubmitting(true);
+    setContactError(null);
+
+    const { error: insertError } = await supabase.from('contact_submissions').insert({
+      first_name: contactNombre,
+      last_name: contactApellido,
+      email: contactEmail,
+      reason: contactMotivo,
+      message: contactMensaje,
+    });
+
+    setContactSubmitting(false);
+
+    if (insertError) {
+      setContactError('No pudimos enviar tu mensaje. Probá de nuevo en un momento.');
+      return;
+    }
+
+    setContactSubmitted(true);
+    setContactNombre("");
+    setContactApellido("");
+    setContactEmail("");
+    setContactMotivo("");
+    setContactMensaje("");
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -811,7 +843,10 @@ export const Home: React.FC = () => {
         <div className="contact-inner">
           <h2 className="section-title reveal">CONTACTO</h2>
           <div className="contact-container reveal reveal-scale reveal-delay-1">
-            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+            {contactSubmitted ? (
+              <p className="contact-success">¡Gracias! Recibimos tu mensaje y te vamos a contactar a la brevedad.</p>
+            ) : (
+            <form className="contact-form" onSubmit={handleContactSubmit}>
               <div className="form-row">
                 <input
                   type="text"
@@ -858,8 +893,12 @@ export const Home: React.FC = () => {
                 onChange={(e) => setContactMensaje(e.target.value)}
                 required
               ></textarea>
-              <button type="submit" className="cta-button submit-btn">Enviar Mensaje</button>
+              {contactError && <p className="contact-error">{contactError}</p>}
+              <button type="submit" className="cta-button submit-btn" disabled={contactSubmitting}>
+                {contactSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
+              </button>
             </form>
+            )}
           </div>
         </div>
         <AlmaFooter />

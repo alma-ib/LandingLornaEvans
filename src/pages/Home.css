@@ -758,6 +758,19 @@
   gap: 1.5rem;
 }
 
+.contact-success {
+  text-align: center;
+  color: var(--color-accent);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  padding: 2rem 1rem;
+}
+
+.contact-error {
+  color: #ff4d6d;
+  font-size: 0.9rem;
+}
+
 .form-row {
   display: flex;
   gap: 1.5rem;

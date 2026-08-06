@@ -3,11 +3,12 @@ import { useAuth } from '../../context/AuthContext';
 import { AdminCrudSection } from '../../components/AdminCrudSection/AdminCrudSection';
 import { SocialLinksAdmin } from '../../components/SocialLinksAdmin/SocialLinksAdmin';
 import { SponsorsAdmin } from '../../components/SponsorsAdmin/SponsorsAdmin';
+import { FormSubmissionsAdmin } from '../../components/FormSubmissionsAdmin/FormSubmissionsAdmin';
 import { TABLE_LABELS, type TableName } from '../../types/content';
 import './admin-shared.css';
 import './AdminDashboard.css';
 
-type DashboardTab = TableName | 'social' | 'sponsors';
+type DashboardTab = TableName | 'social' | 'sponsors' | 'forms';
 
 const TABS: { key: DashboardTab; label: string }[] = [
   { key: 'courses', label: TABLE_LABELS.courses },
@@ -15,6 +16,7 @@ const TABS: { key: DashboardTab; label: string }[] = [
   { key: 'news', label: TABLE_LABELS.news },
   { key: 'social', label: 'Redes Sociales' },
   { key: 'sponsors', label: 'Sponsors' },
+  { key: 'forms', label: 'Formularios' },
 ];
 
 const CONTENT_TABS: TableName[] = ['courses', 'events', 'news'];
@@ -51,6 +53,8 @@ export const AdminDashboard: React.FC = () => {
           <SocialLinksAdmin />
         ) : activeTab === 'sponsors' ? (
           <SponsorsAdmin />
+        ) : activeTab === 'forms' ? (
+          <FormSubmissionsAdmin />
         ) : isContentTab(activeTab) ? (
           <AdminCrudSection table={activeTab} label={TABLE_LABELS[activeTab]} />
         ) : null}
