@@ -1,7 +1,7 @@
 .alma-footer {
   width: 100%;
   align-self: stretch;
-  background-color: var(--color-bg);
+  background-color: rgba(3, 0, 20, 0.88);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   box-sizing: border-box;
   padding: 3.5rem 2rem;

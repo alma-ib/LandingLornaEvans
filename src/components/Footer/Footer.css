@@ -1,8 +1,9 @@
 .footer {
+  position: relative;
   width: 100%;
   align-self: stretch;
-  background-color: var(--color-bg-alt);
-  padding: 4rem 2rem 2rem;
+  background-color: rgba(10, 10, 42, 0.85);
+  padding: 1.75rem 2rem 1.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.05); /* Slight separation line */
   scroll-snap-align: start;
   box-sizing: border-box;
@@ -15,7 +16,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 .footer-logo-container {
@@ -26,7 +27,7 @@
 }
 
 .footer-logo {
-  height: 40px;
+  height: 28px;
   width: auto;
 }
 
@@ -49,7 +50,7 @@
 }
 
 .footer-branding h2 {
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   color: #fff;
   margin: 0;
   transition: all 0.3s ease;
@@ -57,7 +58,7 @@
 
 .footer-branding p {
   color: var(--color-text-muted);
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
 }
 
@@ -85,34 +86,54 @@
 
 .footer-socials {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.1rem;
   justify-content: flex-end;
+  align-items: center;
 }
 
-.social-link {
+.footer-social-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
   color: var(--color-text);
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.social-link:hover {
+.footer-social-icon img {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.footer-social-icon:hover {
   color: var(--color-accent);
+  transform: translateY(-2px);
 }
 
-.footer-bottom {
-  max-width: 1200px;
-  margin: 3rem auto 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+.footer-social-icon:hover img {
+  opacity: 1;
+}
+
+.footer-copyright {
+  position: absolute;
+  left: 50%;
+  bottom: 0.6rem;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
   text-align: center;
   color: var(--color-text-muted);
-  font-size: 0.8rem;
+  font-size: 0.65rem;
+  opacity: 0.65;
 }
 
 @media (max-width: 768px) {
   .footer {
-    padding: 2.5rem 1.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 1.75rem;
   }
 
   .footer-content {
@@ -136,23 +157,14 @@
   .footer-socials {
     justify-content: center;
   }
-
-  .footer-bottom {
-    margin-top: 2rem;
-  }
 }
 
 @media (max-width: 480px) {
   .footer {
-    padding: 2rem 1rem 1.5rem;
+    padding: 1.25rem 1rem 1.6rem;
   }
 
   .footer-branding h2 {
-    font-size: 1.2rem;
-  }
-
-  .footer-bottom {
-    margin-top: 1.5rem;
-    font-size: 0.75rem;
+    font-size: 1rem;
   }
 }

@@ -10,7 +10,7 @@ export const AlmaFooter: React.FC = () => {
           <img src="/images/ALMA-IB/logo-alma-ib.png" alt="ALMA-IB Logo" className="alma-footer-logo" />
           <div>
             <h2>ALMA-IB</h2>
-            <p>Asociación Latinoamericana de Medicina Aeroespacial, Ingeniería y Biotecnología</p>
+            <p>Latin American Aerospace Medicine, Engineering and Biotechnology Association (ALMA-IB) 501(C)(3) NONPROFIT ORGANIZATION</p>
           </div>
         </div>
 

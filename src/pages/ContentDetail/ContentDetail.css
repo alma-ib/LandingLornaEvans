@@ -1,13 +1,7 @@
 .content-detail-page {
   width: 100%;
   min-height: 100vh;
-  background: var(--color-bg);
-  position: relative;
-}
-
-.content-detail-stack {
-  position: relative;
-  z-index: 1;
+  background: rgba(3, 0, 20, 0.88);
 }
 
 .content-detail-main {
