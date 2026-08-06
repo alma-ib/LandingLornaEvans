@@ -27,6 +27,8 @@ export const ContentList: React.FC<ContentListProps> = ({ table, pageTitle, empt
 
   return (
     <div className="content-list-container">
+      <div className="stars-bg stars-bg--fixed"></div>
+      <div className="content-list-stack">
       <GlobalHeader />
 
       <section className="content-list-page">
@@ -66,6 +68,7 @@ export const ContentList: React.FC<ContentListProps> = ({ table, pageTitle, empt
 
       <AlmaFooter />
       <Footer />
+      </div>
     </div>
   );
 };
