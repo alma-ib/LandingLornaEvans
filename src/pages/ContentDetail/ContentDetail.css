@@ -88,3 +88,9 @@
   border-radius: 16px;
   background: rgba(10, 10, 42, 0.4);
 }
+
+.content-detail-latest-news {
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(0, 243, 255, 0.15);
+}

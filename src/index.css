@@ -67,6 +67,29 @@ button {
   font-family: var(--font-heading);
 }
 
+/* Shared pill CTA button used across cards, forms, and sponsor/hero CTAs.
+   Lives here (not scoped to one component) because it's used on pages that
+   don't render Hero, e.g. ContentList/ContentDetail. */
+.cta-button {
+  background: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  box-shadow: 0 0 20px var(--color-accent-glow);
+}
+
 .stars-bg {
   position: absolute;
   top: 0;
