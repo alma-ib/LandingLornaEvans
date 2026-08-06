@@ -179,6 +179,21 @@ export const Home: React.FC = () => {
   const eventCarousel = useInfiniteCarousel(Math.max(events.length, 1), cardsPerView);
   const newsCarousel = useInfiniteCarousel(Math.max(news.length, 1), cardsPerView);
 
+  // Sponsors show as a static 2x2 grid when there are 4 or fewer; beyond
+  // that, they're paginated into 2x2 "pages" and treated as a 1-per-view
+  // infinite carousel (reusing the same clone-padded loop as the other
+  // sections) so it auto-advances seamlessly with no visible rewind.
+  const SPONSORS_PER_PAGE = 4;
+  const sponsorPages = useMemo(() => {
+    const pages: (typeof sponsors)[] = [];
+    for (let i = 0; i < sponsors.length; i += SPONSORS_PER_PAGE) {
+      pages.push(sponsors.slice(i, i + SPONSORS_PER_PAGE));
+    }
+    return pages.length > 0 ? pages : [[]];
+  }, [sponsors]);
+  const [isSponsorsPaused, setIsSponsorsPaused] = useState(false);
+  const sponsorCarousel = useInfiniteCarousel(sponsorPages.length, 1);
+
   // Drag states for Courses
   const [isDragging, setIsDragging] = useState(false);
   const [dragStartX, setDragStartX] = useState(0);
@@ -356,6 +371,14 @@ export const Home: React.FC = () => {
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAutoplayPaused]);
+  useEffect(() => {
+    if (sponsorPages.length <= 1 || isSponsorsPaused) return;
+    const interval = setInterval(() => {
+      sponsorCarousel.next();
+    }, 3500);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sponsorPages.length, isSponsorsPaused]);
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -750,18 +773,35 @@ export const Home: React.FC = () => {
             </p>
             <a href="#contacto" className="cta-button sponsors-cta">Quiero ser sponsor</a>
           </div>
-          <div className="sponsors-track reveal reveal-right reveal-delay-1">
-            {sponsors.map((sponsor) => (
-              <div className="sponsor-item" key={sponsor.id}>
-                {sponsor.url ? (
-                  <a href={sponsor.url} target="_blank" rel="noopener noreferrer">
-                    <img src={sponsor.imageUrl ?? ''} alt={sponsor.name} className="sponsor-logo" />
-                  </a>
-                ) : (
-                  <img src={sponsor.imageUrl ?? ''} alt={sponsor.name} className="sponsor-logo" />
-                )}
-              </div>
-            ))}
+          <div
+            className="sponsors-track-viewport reveal reveal-right reveal-delay-1"
+            onMouseEnter={() => setIsSponsorsPaused(true)}
+            onMouseLeave={() => setIsSponsorsPaused(false)}
+          >
+            <div
+              className="sponsors-track-slider"
+              onTransitionEnd={sponsorCarousel.handleTransitionEnd}
+              style={{
+                transform: `translateX(-${sponsorCarousel.extIndex * sponsorCarousel.percentPerSlide}%)`,
+                transition: !sponsorCarousel.transitionEnabled ? 'none' : 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)',
+              }}
+            >
+              {sponsorCarousel.renderIndices.map((pageIdx, i) => (
+                <div className="sponsors-track" key={`sponsors-page-${pageIdx}-${i}`}>
+                  {sponsorPages[pageIdx].map((sponsor) => (
+                    <div className="sponsor-item" key={sponsor.id}>
+                      {sponsor.url ? (
+                        <a href={sponsor.url} target="_blank" rel="noopener noreferrer">
+                          <img src={sponsor.imageUrl ?? ''} alt={sponsor.name} className="sponsor-logo" />
+                        </a>
+                      ) : (
+                        <img src={sponsor.imageUrl ?? ''} alt={sponsor.name} className="sponsor-logo" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

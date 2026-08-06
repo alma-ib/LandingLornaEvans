@@ -184,11 +184,24 @@
   }
 }
 
+.sponsors-track-viewport {
+  flex: 1;
+  width: 100%;
+  overflow: hidden;
+}
+
+.sponsors-track-slider {
+  display: flex;
+  width: 100%;
+}
+
 .sponsors-track {
+  flex: 0 0 100%;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 0.5rem;
-  flex: 1;
 }
 
 .sponsor-item {
