@@ -418,8 +418,10 @@ export const Home: React.FC = () => {
                 {PILLARS.map((pillar) => (
                   <div className="slideshow-slide" key={pillar.id}>
                     <div className="nosotros-card nosotros-card--slide">
-                      <div className="nosotros-card-icon">{pillar.icon}</div>
-                      <h3 className="nosotros-card-title">{pillar.title}</h3>
+                      <div className="nosotros-card-header">
+                        <div className="nosotros-card-icon">{pillar.icon}</div>
+                        <h3 className="nosotros-card-title">{pillar.title}</h3>
+                      </div>
                       <p className="nosotros-card-description">{pillar.description}</p>
                     </div>
                   </div>
@@ -443,8 +445,10 @@ export const Home: React.FC = () => {
           <div className="nosotros-grid">
             {PILLARS.map((pillar, i) => (
               <div key={pillar.id} className={`nosotros-card reveal reveal-scale reveal-delay-${i + 1}`}>
-                <div className="nosotros-card-icon">{pillar.icon}</div>
-                <h3 className="nosotros-card-title">{pillar.title}</h3>
+                <div className="nosotros-card-header">
+                  <div className="nosotros-card-icon">{pillar.icon}</div>
+                  <h3 className="nosotros-card-title">{pillar.title}</h3>
+                </div>
                 <p className="nosotros-card-description">{pillar.description}</p>
               </div>
             ))}

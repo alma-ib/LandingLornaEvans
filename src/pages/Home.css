@@ -937,6 +937,12 @@
   box-shadow: 0 12px 36px rgba(0, 243, 255, 0.1), 0 0 0 1px rgba(0, 243, 255, 0.07);
 }
 
+.nosotros-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
 .nosotros-card-icon {
   width: 46px;
   height: 46px;
