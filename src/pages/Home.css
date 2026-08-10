@@ -113,6 +113,11 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 40px;
+  /* .sponsors-inner is itself a flex item of .sponsors-bar; without this,
+     its default min-width:auto keeps it from shrinking below the sponsor
+     grid's content width, overflowing past the viewport on narrow screens
+     (clipped by .sponsors-bar's overflow:hidden instead of wrapping). */
+  min-width: 0;
 }
 
 .sponsors-header {
@@ -187,6 +192,7 @@
 .sponsors-track-viewport {
   flex: 1;
   width: 100%;
+  min-width: 0;
   overflow: hidden;
 }
 
