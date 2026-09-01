@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { AlmaFooter } from '../components/AlmaFooter/AlmaFooter';
 import { Footer } from '../components/Footer/Footer';
 import { GlobalHeader } from '../components/GlobalHeader/GlobalHeader';
+import { Seo } from '../components/Seo/Seo';
 import './Home.css';
 import { Hero } from '../components/Hero/Hero';
 import { useSupabaseTable } from '../hooks/useSupabaseTable';
@@ -352,6 +353,7 @@ export const Home: React.FC = () => {
 
   return (
     <div className="home-container">
+      <Seo />
       <GlobalHeader />
 
 
