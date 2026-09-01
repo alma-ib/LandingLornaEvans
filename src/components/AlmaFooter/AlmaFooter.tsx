@@ -31,7 +31,7 @@ export const AlmaFooter: React.FC = () => {
 
         <div className="alma-footer-contact">
           <p className="alma-footer-heading">Contacto</p>
-          <a href="mailto:contacto@alma-ib.org" className="alma-footer-email">contacto@alma-ib.org</a>
+          <a href="mailto:info@almaib.org" className="alma-footer-email">info@almaib.org</a>
           {visibleSocialLinks.length > 0 && (
             <div className="alma-footer-social">
               {visibleSocialLinks.map((social) => (

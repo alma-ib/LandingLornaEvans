@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { Seo } from '../../components/Seo/Seo';
 import './admin-shared.css';
 import './AdminLogin.css';
 
@@ -31,6 +32,7 @@ export const AdminLogin: React.FC = () => {
 
   return (
     <div className="admin-page admin-login-page">
+      <Seo title="Admin" noindex />
       <form className="admin-login-form" onSubmit={handleSubmit}>
         <h1 className="admin-login-title">ALMA-IB Admin</h1>
         <div>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { GlobalHeader } from '../../components/GlobalHeader/GlobalHeader';
 import { AlmaFooter } from '../../components/AlmaFooter/AlmaFooter';
 import { Footer } from '../../components/Footer/Footer';
+import { Seo } from '../../components/Seo/Seo';
 import { useSupabaseTable } from '../../hooks/useSupabaseTable';
 import type { TableName } from '../../types/content';
 import '../Home.css';
@@ -17,16 +18,19 @@ const ROUTE_PREFIX: Record<TableName, string> = {
 interface ContentListProps {
   table: TableName;
   pageTitle: string;
+  seoTitle: string;
+  seoDescription: string;
   emptyLabel: string;
   ctaLabel: string;
   cardPrefix: 'course' | 'event' | 'news';
 }
 
-export const ContentList: React.FC<ContentListProps> = ({ table, pageTitle, emptyLabel, ctaLabel, cardPrefix }) => {
+export const ContentList: React.FC<ContentListProps> = ({ table, pageTitle, seoTitle, seoDescription, emptyLabel, ctaLabel, cardPrefix }) => {
   const { items, loading, error } = useSupabaseTable(table);
 
   return (
     <div className="content-list-container">
+      <Seo title={seoTitle} description={seoDescription} />
       <div className="stars-bg stars-bg--fixed"></div>
       <div className="content-list-stack">
       <GlobalHeader />

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { GlobalHeader } from '../../components/GlobalHeader/GlobalHeader';
 import { Footer } from '../../components/Footer/Footer';
+import { Seo } from '../../components/Seo/Seo';
 import { InscriptionForm } from '../../components/InscriptionForm/InscriptionForm';
 import { useSupabaseItem } from '../../hooks/useSupabaseItem';
 import { useSupabaseTable } from '../../hooks/useSupabaseTable';
@@ -16,6 +17,14 @@ const BACK_LINKS: Record<TableName, { to: string; label: string }> = {
   courses: { to: '/#cursos', label: 'Volver a Cursos' },
   events: { to: '/#eventos', label: 'Volver a Eventos' },
   news: { to: '/#noticias', label: 'Volver a Noticias' },
+};
+
+// Used for <title>/meta while the row is still loading or missing, so the tab
+// and social previews never fall back to a bare "· ALMA-IB".
+const SEO_FALLBACKS: Record<TableName, { title: string; description: string }> = {
+  courses: { title: 'Curso', description: 'Detalle del curso de ALMA-IB en medicina e ingeniería aeroespacial.' },
+  events: { title: 'Evento', description: 'Detalle del evento de ALMA-IB: encuentros del ecosistema aeroespacial latinoamericano.' },
+  news: { title: 'Noticia', description: 'Novedades de ALMA-IB y de la comunidad aeroespacial de América Latina.' },
 };
 
 interface ContentDetailProps {
@@ -49,6 +58,11 @@ export const ContentDetail: React.FC<ContentDetailProps> = ({ table }) => {
 
   return (
     <div className="content-detail-page">
+      <Seo
+        title={item?.title ?? SEO_FALLBACKS[table].title}
+        description={item?.description ?? SEO_FALLBACKS[table].description}
+        type={table === 'news' ? 'article' : 'website'}
+      />
       <div className="stars-bg stars-bg--fixed"></div>
       <div className="content-detail-stack">
       <GlobalHeader />

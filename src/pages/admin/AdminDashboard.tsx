@@ -4,6 +4,7 @@ import { AdminCrudSection } from '../../components/AdminCrudSection/AdminCrudSec
 import { SocialLinksAdmin } from '../../components/SocialLinksAdmin/SocialLinksAdmin';
 import { SponsorsAdmin } from '../../components/SponsorsAdmin/SponsorsAdmin';
 import { FormSubmissionsAdmin } from '../../components/FormSubmissionsAdmin/FormSubmissionsAdmin';
+import { Seo } from '../../components/Seo/Seo';
 import { TABLE_LABELS, type TableName } from '../../types/content';
 import './admin-shared.css';
 import './AdminDashboard.css';
@@ -31,6 +32,7 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="admin-page admin-dashboard">
+      <Seo title="Panel de administración" noindex />
       <header className="admin-dashboard-header">
         <h1 className="admin-dashboard-title">ALMA-IB Admin</h1>
         <button className="admin-btn admin-btn-secondary" onClick={() => signOut()}>Cerrar sesión</button>
