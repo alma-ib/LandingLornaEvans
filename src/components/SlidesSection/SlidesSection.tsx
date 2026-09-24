@@ -23,7 +23,7 @@ export const SlidesSection: React.FC = () => {
       sideImage: '/images/LornaEvans/LornaInstagramPhone.png',
       sideImageLink: 'https://www.instagram.com/lorna.am/',
       buttonText: 'Ver sus últimas Publicaciones',
-      buttonLink: 'ttps://www.instagram.com/lorna.am/'
+      buttonLink: 'https://www.instagram.com/lorna.am/'
     },
     {
       id: 3,
