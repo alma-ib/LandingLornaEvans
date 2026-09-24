@@ -12,7 +12,8 @@ export const SlidesSection: React.FC = () => {
       description: 'Nacida en Argentina, Lorna comenzó su camino con una vocación clara: aprender, superarse y llegar más lejos de lo imaginable. Sus raíces marcaron el inicio de una historia extraordinaria.',
       imageUrl: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1920&q=80',
       sideElement: <OverlappingImages imageFront="/images/LornaEvans/LornaArgNasa.avif" imageBack="/images/LornaEvans/LornaPileta.avif" />,
-      buttonText: 'Ver Entrevistas'
+      buttonText: 'Ver Entrevistas',
+       buttonLink: 'https://www.youtube.com/watch?v=qG6WCGThnf4'
     },
     {
       id: 2,
@@ -21,7 +22,8 @@ export const SlidesSection: React.FC = () => {
       imageUrl: '/images/LornaEvans/art002e009288orig.jpg',
       sideImage: '/images/LornaEvans/LornaInstagramPhone.png',
       sideImageLink: 'https://www.instagram.com/lorna.am/',
-      buttonText: 'Ver sus últimas Publicaciones'
+      buttonText: 'Ver sus últimas Publicaciones',
+      buttonLink: 'ttps://www.instagram.com/lorna.am/'
     },
     {
       id: 3,
@@ -29,7 +31,7 @@ export const SlidesSection: React.FC = () => {
       description: 'Su meta es formar parte de futuras misiones espaciales y convertirse en astronauta. Con la mirada puesta en la Luna, Lorna podría hacer historia para Argentina.',
       imageUrl: '/images/LornaEvans/art002e012702~large.jpg',
       buttonText: 'Ver Mas',
-      buttonLink: 'https://www.instagram.com/almaib.inc/'
+      buttonLink: 'https://www.instagram.com/almaib_org/'
     }
   ];
 
