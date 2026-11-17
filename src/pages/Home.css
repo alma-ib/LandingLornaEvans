@@ -1047,6 +1047,125 @@
   transition-delay: 0.45s;
 }
 
+/* EQUIPO ALMA-IB */
+
+.team-section {
+  width: 100%;
+  margin-top: 100px;
+  padding: 60px 5%;
+  position: relative;
+}
+
+.team-intro {
+  text-align: center;
+  max-width: 750px;
+  margin: 0 auto 55px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 35px;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.team-card {
+  text-align: center;
+  padding: 28px 20px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 18px;
+  transition: transform 0.3s ease,
+              border-color 0.3s ease,
+              background 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-7px);
+  border-color: rgba(80, 180, 255, 0.55);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.team-photo-wrapper {
+  width: 180px;
+  height: 210px;
+  margin: 0 auto 22px;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 2px solid rgba(100, 190, 255, 0.45);
+  background: rgba(60, 100, 150, 0.15);
+}
+
+.team-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.team-avatar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #8dcfff;
+  background: linear-gradient(
+    145deg,
+    rgba(20, 60, 100, 0.8),
+    rgba(10, 20, 45, 0.95)
+  );
+}
+
+.team-info h3 {
+  color: #fff;
+  font-size: 19px;
+  margin-bottom: 12px;
+}
+
+.team-info p {
+  color: rgba(150, 205, 255, 0.9);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .team-section {
+    padding: 40px 15px;
+    margin-top: 50px;
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .team-photo-wrapper {
+    width: 160px;
+    height: 190px;
+  }
+
+  .team-card {
+    max-width: 360px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+
 .reveal-delay-4 {
   transition-delay: 0.6s;
 }
