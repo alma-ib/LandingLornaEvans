@@ -516,6 +516,55 @@ export const Home: React.FC = () => {
             ))}
           </div>
         )}
+        
+        {/* EQUIPO ALMA-IB */}
+        <div className="team-section">
+
+          <h2 className="section-title reveal">
+            NUESTRO EQUIPO
+          </h2>
+
+          <p className="team-intro reveal">
+            Profesionales comprometidos con el desarrollo
+            científico, tecnológico y educativo del sector
+            aeroespacial latinoamericano.
+          </p>
+
+          <div className="team-grid">
+            {TEAM_MEMBERS.map((member, index) => (
+              <article
+                className={`team-card reveal reveal-scale reveal-delay-${(index % 4) + 1}`}
+                key={member.id}
+              >
+
+                <div className="team-photo-wrapper">
+
+                  {member.image ? (
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="team-photo"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="team-avatar">
+                      {member.initials}
+                    </div>
+                  )}
+
+                </div>
+
+                <div className="team-info">
+                  <h3>{member.name}</h3>
+                  <p>{member.role}</p>
+                </div>
+
+              </article>
+            ))}
+          </div>
+
+        </div>
+
       </section>
 
       <Hero />
