@@ -69,6 +69,66 @@ const PILLARS: Pillar[] = [
   },
 ];
 
+interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+  image: string | null;
+  initials: string;
+}
+
+const TEAM_MEMBERS: TeamMember[] = [
+  {
+    id: 1,
+    name: "Lorna A. Evans",
+    role: "President",
+    image: "/images/equipo/lorna-evans.jpg",
+    initials: "LE",
+  },
+  {
+    id: 2,
+    name: "Diego Larrosa",
+    role: "Director del Área de Educación y Divulgación STEM",
+    image: "/images/equipo/diego-larrosa.jpg",
+    initials: "DL",
+  },
+  {
+    id: 3,
+    name: "Gustavo Persak",
+    role: "Secretario",
+    image: Gustavo-Persak.jpg,
+    initials: "GP",
+  },
+  {
+    id: 4,
+    name: "Rocio Garcia",
+    role: "Tesorera",
+    image: Rocio-Garcia.jpg,
+    initials: "RG",
+  },
+  {
+    id: 5,
+    name: "Cynthia Quinteros",
+    role: "Jefa de Operaciones (COO - Chief Operating Officer)",
+    image: Cynthia-Quinteros.jpg,
+    initials: "CQ",
+  },
+  {
+    id: 6,
+    name: "Marina Larrosa",
+    role: "Directora de Relaciones Institucionales y Asuntos Públicos",
+    image: Marina-Larrosa.jpg,
+    initials: "ML",
+  },
+  {
+    id: 7,
+    name: "Ivanna Wilson",
+    role: "Vicepresidente",
+    image: Ivanna-Wilson.jpg,
+    initials: "IW",
+  },
+];
+
 export const Home: React.FC = () => {
   const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
