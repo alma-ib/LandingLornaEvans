@@ -96,39 +96,38 @@ const TEAM_MEMBERS: TeamMember[] = [
     id: 3,
     name: "Gustavo Persak",
     role: "Secretario",
-    image: Gustavo-Persak.jpg,
+    image: "/images/equipo/Gustavo-Persak.jpg",
     initials: "GP",
   },
   {
     id: 4,
     name: "Rocio Garcia",
     role: "Tesorera",
-    image: Rocio-Garcia.jpg,
+    image: "/images/equipo/Rocio-Garcia.jpg",
     initials: "RG",
   },
   {
     id: 5,
     name: "Cynthia Quinteros",
     role: "Jefa de Operaciones (COO - Chief Operating Officer)",
-    image: Cynthia-Quinteros.jpg,
+    image: "/images/equipo/Cynthia-Quinteros.jpg",
     initials: "CQ",
   },
   {
     id: 6,
     name: "Marina Larrosa",
     role: "Directora de Relaciones Institucionales y Asuntos Públicos",
-    image: Marina-Larrosa.jpg,
+    image: "/images/equipo/Marina-Larrosa.jpg",
     initials: "ML",
   },
   {
     id: 7,
     name: "Ivanna Wilson",
     role: "Vicepresidente",
-    image: Ivanna-Wilson.jpg,
+    image: "/images/equipo/Ivanna-Wilson.jpg",
     initials: "IW",
   },
 ];
-
 export const Home: React.FC = () => {
   const [isAutoplayPaused, setIsAutoplayPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
