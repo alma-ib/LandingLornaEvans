@@ -1164,7 +1164,13 @@
     margin: 0 auto;
   }
 }
+.team-photo-wrapper img {
+  display: block;
+}
 
+.team-photo-wrapper .team-avatar {
+  min-height: 100%;
+}
 
 .reveal-delay-4 {
   transition-delay: 0.6s;
